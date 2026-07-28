@@ -1,4 +1,4 @@
-# 🗺️ Interactive Product Roadmap
+# 🗺️ PO/PM Roadmap
 
 Um roadmap de produto interativo, visual e totalmente independente, construído em um único arquivo HTML.
 
