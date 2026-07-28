@@ -1,0 +1,2274 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 Product Roadmap</title>
+<script>
+// Applied synchronously before first paint to avoid a flash of the wrong theme.
+// Dark is the default look (matches the original file) — light only kicks in
+// once the user has explicitly picked it via the toggle.
+(function() {
+  try {
+    var saved = localStorage.getItem('roadmap_theme');
+    if (saved === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  } catch (e) {}
+})();
+</script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  color-scheme: dark;
+  --bg:#111; --text:#fff; --text-dim:#999; --text-dim2:#666; --text-dim3:#555;
+  --panel:#1a1a1a; --panel-strong:#000; --panel-hover:#1a1a1a;
+  --border:#333; --border-soft:#2a2a2a; --border-softer:#3a3a3a;
+  --input-bg:#2e2e2e; --input-border:#555;
+  --modal-bg:#1e1e1e; --modal-border:#444;
+  --progress-track:#444;
+  --row-stripe: rgba(255,255,255,.02);
+  --row-hover: rgba(255,255,255,.05);
+  --grid-line:#1e1e1e; --grid-line-strong:#3a3a3a;
+  --scrollbar-track:#1a1a1a; --scrollbar-thumb:#444;
+  --toast-bg:#2a2a2a; --toast-text:#fff;
+  --tooltip-bg:#252525; --tooltip-border:#555; --tooltip-text:#ddd;
+  --focus-bg: rgba(255,255,255,.06);
+  --gold:#FFD700; --gold-text:#FFD700;
+  --wm-color:#484848;
+  --btn-save-bg:#555; --btn-save-text:#aaa;
+  --shadow-strong: rgba(0,0,0,.6); --shadow-soft: rgba(0,0,0,.75);
+  --sc-num-color:#ddd; --sc-date-color:#999;
+  --today-tip-color:#ff9999;
+  --pre-dev-strong: rgba(255,255,255,.55); --pre-dev-soft: rgba(255,255,255,.35);
+  --tv-stripe: rgba(255,255,255,.22);
+  --toggle-track: linear-gradient(135deg,#2a2f45,#12131c);
+  --toggle-thumb-bg:#1c1e26;
+  --toggle-shadow: 0 2px 6px rgba(0,0,0,.5);
+  --toggle-ring: 0 0 0 1px rgba(255,255,255,.08);
+  --status-notstarted: #555;
+  --btn-io-border: #3a3a3a; --btn-io-text: #555;
+  --btn-io-hover-border: #555; --btn-io-hover-text: #999;
+  --bar-shadow: none;
+}
+[data-theme="light"] {
+  color-scheme: light;
+  --bg:#f4f5f7; --text:#1c1e21; --text-dim:#5b5f66; --text-dim2:#8a8f98; --text-dim3:#9aa0a8;
+  --panel:#e9eaed; --panel-strong:#e3e4e8; --panel-hover:#dcdde2;
+  --border:#d4d6db; --border-soft:#dfe1e5; --border-softer:#cfd2d8;
+  --input-bg:#ffffff; --input-border:#c7cad0;
+  --modal-bg:#ffffff; --modal-border:#d8dadf;
+  --progress-track:#dcdde2;
+  --row-stripe: rgba(0,0,0,.03);
+  --row-hover: rgba(0,0,0,.045);
+  --grid-line:#e4e5e8; --grid-line-strong:#cfd2d8;
+  --scrollbar-track:#eceef1; --scrollbar-thumb:#c3c6cc;
+  --toast-bg:#2b2d33; --toast-text:#fff;
+  --tooltip-bg:#ffffff; --tooltip-border:#d8dadf; --tooltip-text:#2b2d33;
+  --focus-bg: rgba(0,0,0,.045);
+  --gold:#FFD700; --gold-text:#9a6b00;
+  --wm-color:#c7cad0;
+  --btn-save-bg:#dcdde2; --btn-save-text:#5b5f66;
+  --shadow-strong: rgba(20,20,25,.18); --shadow-soft: rgba(20,20,25,.35);
+  --sc-num-color:#2b2d33; --sc-date-color:#6a6e75;
+  --today-tip-color:#c0392b;
+  --pre-dev-strong: rgba(0,0,0,.5); --pre-dev-soft: rgba(0,0,0,.32);
+  --tv-stripe: rgba(0,0,0,.18);
+  --toggle-track: linear-gradient(135deg,#bcd4ff,#eaf4ff);
+  --toggle-thumb-bg:#ffffff;
+  --toggle-shadow: 0 2px 6px rgba(20,20,25,.25);
+  --toggle-ring: 0 0 0 1px rgba(20,20,25,.14);
+  --status-notstarted: #808894;
+  --btn-io-border: #b9bcc3; --btn-io-text: #6b707a;
+  --btn-io-hover-border: #8a8f98; --btn-io-hover-text: #2b2d33;
+  --bar-shadow: 0 1px 4px rgba(30,34,40,.18);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  user-select: none;
+  overflow-x: hidden;
+  transition: background .25s ease, color .25s ease;
+}
+
+/* ─── TOP BAR ─────────────────────────────────────── */
+.top-bar {
+  padding: 10px 20px 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.roadmap-title {
+  font-size: 30px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.title-text {
+  color: var(--text);
+  outline: none;
+  border: 1px dashed transparent;
+  border-radius: 3px;
+  padding: 1px 6px;
+}
+.title-text:focus {
+  border-color: var(--gold);
+  background: var(--focus-bg);
+}
+
+.progress-bar {
+  display: flex;
+  width: 220px;
+  height: 26px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--progress-track);
+}
+.pb-done {
+  background: #4CAF50;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: bold; color: #fff; min-width: 0;
+}
+.pb-prog {
+  background: #4a90d9;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: bold; color: #fff; min-width: 0;
+}
+.wip-count { font-size: 10px; color: var(--text-dim2); white-space: nowrap; margin-left: 6px; letter-spacing: .2px; }
+
+.toolbar { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+
+.btn {
+  padding: 6px 14px; border: none; border-radius: 4px;
+  cursor: pointer; font-size: 12px; font-weight: bold;
+  transition: opacity .15s;
+}
+.btn:hover { opacity: .82; }
+.btn-add    { background: #4CAF50; color: #fff; }
+.btn-save   { background: var(--btn-save-bg); color: var(--btn-save-text); transition: background .3s, color .3s, box-shadow .3s; }
+.btn-save.dirty {
+  background: #e67e22; color: #fff;
+  box-shadow: 0 0 0 0 rgba(230,126,34,.7);
+  animation: savePulse 2s infinite;
+}
+@keyframes savePulse {
+  0%   { box-shadow: 0 0 0 0 rgba(230,126,34,.7); }
+  70%  { box-shadow: 0 0 0 7px rgba(230,126,34,0); }
+  100% { box-shadow: 0 0 0 0 rgba(230,126,34,0); }
+}
+.btn-copy   { background: #8e44ad; color: #fff; }
+.btn-modal-save   { background: #4CAF50; color: #fff; }
+.btn-modal-delete { background: #e74c3c; color: #fff; }
+.btn-modal-cancel { background: var(--modal-border); color: var(--text); }
+.btn-io    { padding: 3px 9px; background: transparent; border: 1px solid var(--btn-io-border);
+             border-radius: 4px; color: var(--btn-io-text); font-size: 10px; font-weight: bold;
+             cursor: pointer; transition: color .15s, border-color .15s; }
+.btn-io:hover { color: var(--btn-io-hover-text); border-color: var(--btn-io-hover-border); }
+.tab-btn { background: transparent; border: none; border-bottom: 2px solid transparent;
+           color: var(--text-dim2); padding: 6px 16px; cursor: pointer; font-size: 12px; font-weight: bold;
+           margin-bottom: -1px; transition: color .15s; }
+.tab-btn:hover   { color: var(--text-dim); }
+.tab-btn.tab-active { color: var(--gold-text); border-bottom-color: var(--gold-text); }
+
+/* ─── THEME TOGGLE ───────────────────────────────────── */
+.theme-toggle {
+  position: relative; width: 54px; height: 28px; flex-shrink: 0;
+  border: none; border-radius: 999px; cursor: pointer; padding: 0;
+  background: var(--toggle-track);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.15), var(--toggle-ring), 0 1px 3px rgba(0,0,0,.15);
+  transition: background .35s ease;
+}
+.theme-toggle::before {
+  content: '🌙';
+  position: absolute; top: 3px; left: 4px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: var(--toggle-thumb-bg);
+  box-shadow: var(--toggle-shadow);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; line-height: 1;
+  transform: translateX(0);
+  transition: transform .35s cubic-bezier(.4,0,.2,1), background .35s ease;
+}
+[data-theme="light"] .theme-toggle::before {
+  content: '☀️';
+  transform: translateX(26px);
+}
+.theme-toggle:hover { filter: brightness(1.08); }
+.theme-toggle:active::before { transform: scale(.92) translateX(0); }
+[data-theme="light"] .theme-toggle:active::before { transform: scale(.92) translateX(26px); }
+
+/* ─── LEGEND ─────────────────────────────────────── */
+.legend {
+  display: flex; gap: 20px;
+  padding: 2px 20px 10px;
+  justify-content: flex-start;
+  font-size: 12px;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-dot  { width: 11px; height: 11px; border-radius: 50%; }
+
+/* ─── CHART OUTER ────────────────────────────────── */
+.chart-outer {
+  display: flex;
+  margin: 0 20px 24px;
+  width: calc(100vw - 40px);
+}
+
+.group-label {
+  min-width: 52px; width: 52px;
+  background: var(--panel-strong);
+  border-radius: 4px 0 0 4px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+  transition: background .25s ease;
+}
+.group-label:hover { background: var(--panel-hover); }
+.group-label-text {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 18px; font-weight: 900;
+  letter-spacing: 3px; color: var(--text);
+  padding: 12px 6px;
+}
+
+.chart-main {
+  flex: 1;
+  overflow-x: auto;
+  min-width: 0;
+}
+
+/* ─── HEADER ─────────────────────────────────────── */
+.quarter-row { display: flex; height: 30px; }
+.quarter-cell {
+  background: var(--panel-strong);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: bold; color: var(--gold-text);
+  flex-shrink: 0;
+  transition: background .25s ease, border-color .25s ease;
+}
+
+.sprint-row { display: flex; height: 46px; }
+.sprint-cell {
+  background: var(--panel);
+  border: 1px solid var(--border-soft);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  flex-shrink: 0; gap: 1px;
+  transition: background .25s ease, border-color .25s ease;
+}
+.sc-num  { font-size: 10px; font-weight: bold; color: var(--sc-num-color); line-height: 1; }
+.sc-date { font-size: 8px;  color: var(--sc-date-color); line-height: 1.1; }
+
+/* ─── GANTT ──────────────────────────────────────── */
+.gantt-area { display: flex; }
+.gantt-grid { position: relative; flex-shrink: 0; }
+
+.row-bg {
+  position: absolute; left: 0; right: 0; height: 44px; pointer-events: none;
+}
+.grid-vline {
+  position: absolute; top: 0; bottom: 0; width: 1px;
+  pointer-events: none; z-index: 1;
+}
+.today-line {
+  position: absolute; top: 0; bottom: 0; width: 2px;
+  background: rgba(255,100,100,.75); z-index: 6; pointer-events: none;
+}
+.today-tip {
+  position: absolute; top: 2px;
+  font-size: 9px; color: var(--today-tip-color); white-space: nowrap;
+  transform: translateX(-50%); z-index: 7; pointer-events: none;
+}
+
+/* ─── SELECTION HIGHLIGHTS ──────────────────────── */
+.row-hl {
+  position: absolute; left: 0; right: 0; pointer-events: none; z-index: 2;
+  background: rgba(255,215,0,.06);
+  border-top: 1px solid rgba(255,215,0,.15); border-bottom: 1px solid rgba(255,215,0,.15);
+}
+.col-hl {
+  position: absolute; top: 0; bottom: 0; pointer-events: none; z-index: 2;
+  background: rgba(255,215,0,.05);
+  border-left: 1px solid rgba(255,215,0,.15); border-right: 1px solid rgba(255,215,0,.15);
+}
+.sprint-cell { cursor: pointer; transition: background .15s; }
+.sprint-cell:hover    { background: var(--row-hover); }
+.sprint-cell.selected { background: rgba(255,215,0,.13); }
+.sprint-cell.current-sprint { background: rgba(255,215,0,.07); border-color: rgba(255,215,0,.35); }
+.sc-countdown { font-size: 7px; color: var(--gold-text); font-weight: bold; line-height: 1; }
+
+/* ─── LASSO / MULTI-SELECT ───────────────────────── */
+.lasso-rect {
+  position: absolute; border: 1px dashed rgba(255,215,0,.85);
+  background: rgba(255,215,0,.07); pointer-events: none; z-index: 20;
+}
+.gantt-bar.bar-selected { box-shadow: 0 0 0 2px rgba(255,215,0,.95); }
+
+/* ─── BARS ───────────────────────────────────────── */
+.gantt-bar {
+  position: absolute; height: 34px; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: grab; overflow: hidden; z-index: 3;
+  border: 2px solid transparent;
+  box-shadow: var(--bar-shadow);
+  transition: filter .1s, border-color .1s;
+}
+.gantt-bar:hover  { filter: brightness(1.15); border-color: rgba(255,255,255,.4); }
+.gantt-bar.drag   { cursor: grabbing; filter: brightness(1.2); border-color: rgba(255,255,255,.7); z-index: 10; }
+/* category outlines injected dynamically via #catStyles */
+.legend-cat { width: 22px; height: 13px; border: 2px dashed; border-radius: 2px; display: inline-block; flex-shrink: 0; }
+
+.bar-text {
+  font-size: 11px; font-weight: bold; color: #fff;
+  padding: 0 6px; text-align: center;
+  white-space: nowrap; overflow: hidden;
+  pointer-events: none; width: 100%;
+  line-height: 1.25;
+}
+
+.rh {
+  position: absolute; top: 0; bottom: 0; width: 8px;
+  cursor: ew-resize; z-index: 4; opacity: 0;
+}
+.rh.l { left: 0; }
+.rh.r { right: 0; }
+.gantt-bar:hover .rh { opacity: 1; background: rgba(255,255,255,.22); border-radius: 2px; }
+
+/* ─── MODAL ──────────────────────────────────────── */
+.overlay {
+  display: none; position: fixed; inset: 0;
+  background: var(--shadow-soft); z-index: 200;
+  align-items: center; justify-content: center;
+}
+.overlay.open { display: flex; }
+
+.modal {
+  background: var(--modal-bg); border: 1px solid var(--modal-border); border-radius: 8px;
+  padding: 22px; width: 430px; max-width: 95vw;
+}
+.modal h3 { font-size: 16px; color: var(--gold-text); margin-bottom: 16px; }
+
+.fg { margin-bottom: 12px; }
+.fg label {
+  display: block; font-size: 10px; color: var(--text-dim);
+  text-transform: uppercase; letter-spacing: .8px; margin-bottom: 4px;
+}
+.fg input, .fg select, .fg textarea {
+  width: 100%; padding: 7px 10px;
+  background: var(--input-bg); border: 1px solid var(--input-border);
+  border-radius: 4px; color: var(--text); font-size: 13px;
+  font-family: inherit;
+}
+.fg textarea { resize: vertical; min-height: 64px; line-height: 1.45; }
+.fg select option { background: var(--input-bg); }
+.half-lbl { display: flex; align-items: center; gap: 6px; margin-top: 6px;
+            font-size: 11px; color: var(--text-dim); cursor: pointer; width: auto; }
+.half-lbl input { width: auto; cursor: pointer; accent-color: var(--gold); }
+
+/* ─── BAR TOOLTIP ─────────────────────────────────── */
+.bar-tooltip {
+  position: fixed; z-index: 300;
+  background: var(--tooltip-bg); border: 1px solid var(--tooltip-border); border-radius: 6px;
+  padding: 9px 13px; font-size: 12px; color: var(--tooltip-text);
+  max-width: 300px; line-height: 1.5; white-space: pre-wrap;
+  pointer-events: none; box-shadow: 0 6px 20px var(--shadow-strong);
+}
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.modal-btns { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
+
+/* ─── TOAST ──────────────────────────────────────── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: var(--toast-bg); color: var(--toast-text); padding: 11px 22px;
+  border-radius: 6px; font-size: 13px; z-index: 999;
+  box-shadow: 0 4px 16px var(--shadow-strong);
+  animation: toastIn .2s ease;
+}
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+::-webkit-scrollbar { width: 7px; height: 7px; }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 4px; }
+
+/* ─── T&V + PRE-DEV (TEST FILE) ─────────────────────── */
+.tv-overlay {
+  position: absolute; right: 0; top: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 4px,
+    var(--tv-stripe) 4px,
+    var(--tv-stripe) 6px
+  );
+  border-radius: 0 2px 2px 0;
+  pointer-events: none; z-index: 1;
+}
+/* Discovery bracket: "|—" shape */
+.pre-dev-block {
+  position: absolute; pointer-events: none; z-index: 2;
+}
+.pre-dev-vline {
+  position: absolute; left: 0; top: 3px; bottom: 3px;
+  width: 2px; background: var(--pre-dev-strong); border-radius: 1px;
+}
+.pre-dev-hline {
+  position: absolute; left: 0; right: 0;
+  top: 50%; height: 1.5px;
+  background: var(--pre-dev-soft);
+  transform: translateY(-50%);
+}
+
+/* ─── TOOLBAR & LEGEND SEPARATORS ───────────────────── */
+.toolbar-sep { width: 1px; background: var(--border); align-self: stretch; margin: 2px 4px; }
+.legend-sep  { width: 1px; background: var(--border-soft); align-self: stretch; margin: 0 6px; }
+.btn-gear    { font-size: 14px; padding: 2px 7px; }
+
+/* ─── SETTINGS PANEL ─────────────────────────────────── */
+.settings-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 14px; }
+.cfg-input     { width: 100%; background: var(--input-bg); border: 1px solid var(--modal-border); color: var(--text);
+                 padding: 6px 8px; border-radius: 4px; font-size: 12px; outline: none; }
+.cfg-covered   { margin: -4px 0 14px; font-size: 11px; color: var(--text-dim2); }
+
+/* ─── CATEGORY LIST ──────────────────────────────────── */
+.cat-row         { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.cat-swatch      { width: 22px; height: 14px; border: 2px dashed; border-radius: 2px;
+                   flex-shrink: 0; display: inline-block; }
+.cat-name-input  { flex: 1; background: var(--input-bg); border: 1px solid var(--modal-border); color: var(--text);
+                   padding: 6px 8px; border-radius: 4px; font-size: 12px; outline: none; }
+.cat-color-input { width: 32px; height: 28px; border: none; border-radius: 3px;
+                   cursor: pointer; padding: 1px; background: none; }
+.cat-del-btn     { background: #e74c3c; color: #fff; border: none; border-radius: 4px;
+                   padding: 3px 8px; font-size: 11px; cursor: pointer; }
+.cat-add-row     { border-top: 1px solid var(--border); padding-top: 12px; margin-top: 8px;
+                   display: flex; gap: 8px; align-items: center; }
+
+/* ─── CATEGORY FILTER ────────────────────────────────── */
+.legend-cat-filter { cursor: pointer; border-radius: 4px; padding: 2px 6px;
+                     margin-left: 2px; transition: background .15s; }
+.legend-cat-filter:hover { background: var(--row-hover); }
+.legend-cat-filter.filter-active { background: rgba(255,215,0,.13);
+                                   outline: 1px solid rgba(255,215,0,.45); }
+</style>
+<style id="catStyles"></style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <div class="roadmap-title">
+    <span contenteditable="true" class="title-text" id="titleText" spellcheck="false">2026 PRODUCT ROADMAP</span>
+  </div>
+  <div class="progress-bar">
+    <div class="pb-done" id="pbDone"></div>
+    <div class="pb-prog" id="pbProg"></div>
+  </div>
+  <span class="wip-count" id="wipCount"></span>
+  <div class="toolbar">
+    <button class="btn btn-add" onclick="openAddModal()">+ Add Item</button>
+    <button class="btn btn-copy" onclick="copyScreen()">📷 Copy to Email</button>
+    <button class="btn btn-save" onclick="saveHTML(event)" id="btnSave" title="Salvar roadmap">💾 Save</button>
+    <span class="toolbar-sep"></span>
+    <button class="btn-io" onclick="exportJSON()" title="Exportar dados como JSON (backup)">↑ JSON</button>
+    <button class="btn-io" onclick="document.getElementById('importFile').click()" title="Importar dados de JSON">↓ JSON</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(this)">
+    <span class="toolbar-sep"></span>
+    <button class="btn-io btn-gear" onclick="openCatModal()" title="Gerenciar categorias">⚙</button>
+    <span class="toolbar-sep"></span>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Alternar modo claro/escuro" aria-label="Alternar modo claro/escuro"></button>
+  </div>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#4CAF50"></div>Completed</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#4a90d9"></div>In progress</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#e74c3c"></div>Delayed</div>
+  <div class="legend-item"><div class="legend-dot" style="background:var(--status-notstarted)"></div>Not Started</div>
+  <span class="legend-sep"></span>
+  <div class="legend-item"><div style="width:22px;height:13px;border-radius:2px;background:var(--status-notstarted);overflow:hidden;flex-shrink:0;position:relative"><div style="position:absolute;inset:0;background:repeating-linear-gradient(-45deg,transparent,transparent 3px,rgba(255,255,255,.3) 3px,rgba(255,255,255,.3) 5px)"></div></div>T&amp;V</div>
+  <div class="legend-item"><div style="width:11px;height:11px;display:inline-flex;align-items:center;justify-content:center"><span style="font-size:13px;color:var(--pre-dev-strong);line-height:1">⊢</span></div>Discovery</div>
+  <span class="legend-sep"></span>
+  <div id="catLegend" style="display:contents"></div>
+</div>
+
+<!-- SETTINGS (Categories + Sprints) -->
+<div class="overlay" id="catOverlay" onclick="catOverlayBg(event)">
+  <div class="modal" style="width:420px">
+    <h3>⚙ Settings</h3>
+    <div class="settings-tabs">
+      <button id="tabBtnCat" class="tab-btn tab-active" onclick="showSettingsTab('cat')">Categories</button>
+      <button id="tabBtnSpr" class="tab-btn" onclick="showSettingsTab('spr')">Sprints</button>
+    </div>
+
+    <!-- Tab: Categories -->
+    <div id="tabCat">
+      <div id="catList" style="min-height:32px"></div>
+      <div class="cat-add-row">
+        <input id="newCatName" class="cat-name-input" placeholder="New category name">
+        <input type="color" id="newCatColor" class="cat-color-input" value="#3498db">
+        <button class="btn btn-modal-save" onclick="addCategory()" style="padding:5px 12px;font-size:11px">+ Add</button>
+      </div>
+    </div>
+
+    <!-- Tab: Sprints -->
+    <div id="tabSpr" style="display:none">
+      <div class="fg">
+        <label>First sprint starts on</label>
+        <input type="date" id="cfgStart" class="cfg-input" onchange="_autoFillSprints()">
+      </div>
+      <div class="fg">
+        <label>Sprint length</label>
+        <select id="cfgWeeks" class="cfg-input" onchange="_autoFillSprints()">
+          <option value="1">1 week</option>
+          <option value="2">2 weeks</option>
+          <option value="3">3 weeks</option>
+          <option value="4">4 weeks</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Total sprints</label>
+        <input type="number" id="cfgTotal" class="cfg-input" min="1" max="100" oninput="_updateCoveredUntil()">
+      </div>
+      <div class="cfg-covered">
+        Covers until: <span id="cfgCoveredUntil" style="color:var(--gold-text);font-weight:bold"></span>
+      </div>
+      <button class="btn btn-modal-save" onclick="applySprintConfig()" style="width:100%;padding:8px 0">Apply</button>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-top:14px">
+      <button class="btn btn-modal-cancel" onclick="closeCatModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- CHART -->
+<div class="chart-outer" id="chartOuter">
+  <div class="group-label" id="groupLabel" title="Click to edit">
+    <div class="group-label-text" id="groupLabelText">PRODUCT / PLATFORM</div>
+  </div>
+  <div class="chart-main" id="chartMain">
+    <div id="quarterRow" class="quarter-row"></div>
+    <div id="sprintRow" class="sprint-row"></div>
+    <div class="gantt-area">
+      <div id="ganttGrid" class="gantt-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit / Add Modal -->
+<div class="overlay" id="overlay" onclick="overlayBg(event)">
+  <div class="modal">
+    <h3 id="modalTitle">Edit Item</h3>
+    <div class="fg">
+      <label>Name</label>
+      <input type="text" id="fName" placeholder="Item name">
+    </div>
+    <div class="two-col">
+      <div class="fg"><label>Start Sprint</label><select id="fStart"></select></div>
+      <div class="fg"><label>End Sprint</label><select id="fEnd"></select></div>
+    </div>
+    <div class="two-col">
+      <div class="fg">
+        <label>T&amp;V duration</label>
+        <select id="fTV">
+          <option value="0">None</option>
+          <option value="0.5">½ sprint</option>
+          <option value="1">1 sprint</option>
+          <option value="1.5">1½ sprints</option>
+          <option value="2">2 sprints</option>
+          <option value="2.5">2½ sprints</option>
+          <option value="3">3 sprints</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Discovery (pre-dev)</label>
+        <select id="fPre">
+          <option value="0">None</option>
+          <option value="0.5">½ sprint</option>
+          <option value="1">1 sprint</option>
+          <option value="1.5">1½ sprints</option>
+          <option value="2">2 sprints</option>
+          <option value="3">3 sprints</option>
+          <option value="4">4 sprints</option>
+        </select>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="fg">
+        <label>Status</label>
+        <select id="fStatus">
+          <option value="completed">Completed</option>
+          <option value="in-progress">In Progress</option>
+          <option value="delayed">Delayed</option>
+          <option value="not-started">Not Started</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label>Category</label>
+        <select id="fCategory"><option value="">— None —</option></select>
+      </div>
+    </div>
+    <div class="fg">
+      <label>Comments</label>
+      <textarea id="fNotes" placeholder="Add notes or comments…"></textarea>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-modal-delete" id="btnDel" onclick="deleteItem()">Delete</button>
+      <button class="btn btn-modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-modal-save" onclick="saveItem()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Group Label Modal -->
+<div class="overlay" id="groupOverlay" onclick="groupOverlayBg(event)">
+  <div class="modal" style="width:300px">
+    <h3>Edit Group Label</h3>
+    <div class="fg">
+      <label>Label</label>
+      <input type="text" id="fGroupLabel" placeholder="e.g. Product / Platform">
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-modal-cancel" onclick="closeGroupModal()">Cancel</button>
+      <button class="btn btn-modal-save" onclick="saveGroupLabel()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// PRODUCT ROADMAP — single-file Gantt chart
+//
+// Data flow:  DEFAULT (embedded JSON) → app (working copy in RAM)
+//             Save button injects app back into the HTML file via File System
+//             Access API (Chrome/Edge) or falls back to a download.
+//
+// Key concepts:
+//   • Sprint positions (item.s / item.e) are floats: whole = sprint boundary,
+//     .5 = mid-sprint (half-sprint offset). All drag snaps to 0.5 increments.
+//   • item.tv  = T&V sprints reserved at the END of the bar (diagonal stripe).
+//   • item.pre = Discovery sprints BEFORE the bar ("|—" bracket, separate element).
+//     Because pre-dev sits in the grid as a sibling (not a child) of the bar,
+//     renderGantt() MUST be called after every drag/resize to reposition it.
+//   • Categories are shown as a corner triangle (top-left) in the category color.
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Snapshot of the page HTML taken before renderAll() modifies the DOM.
+// Used as fallback template when the File System handle is unavailable.
+const _TEMPLATE = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+// ═══════════════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════════════
+let   SPRINT_W     = 60;   // px per sprint column — recalculated in renderAll()
+const ROW_H        = 44;   // px per Gantt row
+const BAR_TOP      = 5;    // px from row top to bar top (centers bar in row)
+let SPRINT_COUNT = 26;
+
+const STATUS_COLOR = {
+  'completed':   '#4CAF50',
+  'in-progress': '#4a90d9',
+  'delayed':     '#e74c3c',
+  'not-started': '#555',
+};
+
+// "not-started" reads from --status-notstarted so it softens in light mode
+// (a near-black gray reads as too heavy against a light background).
+function _statusColor(status) {
+  if (status === 'not-started' || !STATUS_COLOR[status]) {
+    const v = getComputedStyle(document.documentElement).getPropertyValue('--status-notstarted').trim();
+    return v || STATUS_COLOR['not-started'];
+  }
+  return STATUS_COLOR[status];
+}
+
+
+// ═══════════════════════════════════════════════════════
+// SPRINTS
+// ═══════════════════════════════════════════════════════
+// Parses "YYYY-MM-DD" as local midnight to avoid UTC timezone shift.
+function _parseLocalDate(str) {
+  const [y, m, d] = str.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function buildSprints(cfg) {
+  const base  = cfg ? _parseLocalDate(cfg.start) : new Date(2026, 0, 5);
+  const weeks = cfg ? cfg.weeksPerSprint  : 2;
+  const total = cfg ? cfg.totalSprints    : 26;
+  const out   = [];
+  for (let i = 0; i < total; i++) {
+    const start = new Date(base);
+    start.setDate(start.getDate() + i * weeks * 7);
+    const end = new Date(start);
+    end.setDate(end.getDate() + weeks * 7 - 3); // Friday of last week
+    out.push({ num: i + 1, idx: i, start, end,
+               quarter: Math.floor(start.getMonth() / 3) + 1 });
+  }
+  return out;
+}
+let SPRINTS = buildSprints();
+
+function getQuarterGroups() {
+  const groups = [];
+  let cur = null;
+  SPRINTS.forEach(sp => {
+    if (sp.quarter !== cur) { cur = sp.quarter; groups.push({ q: cur, start: sp.idx, count: 1 }); }
+    else groups[groups.length - 1].count++;
+  });
+  return groups;
+}
+
+const Q_BOUNDARIES = new Set();
+getQuarterGroups().forEach(qg => { Q_BOUNDARIES.add(qg.start); Q_BOUNDARIES.add(qg.start + qg.count); });
+
+function rebuildSprints() {
+  const cfg = (app && app.sprintConfig) || DEFAULT.sprintConfig;
+  SPRINT_COUNT = cfg.totalSprints;
+  SPRINTS      = buildSprints(cfg);
+  Q_BOUNDARIES.clear();
+  getQuarterGroups().forEach(qg => { Q_BOUNDARIES.add(qg.start); Q_BOUNDARIES.add(qg.start + qg.count); });
+}
+
+// Returns the configured sprint length in days — use instead of hardcoding 14.
+function _sprintDays() {
+  return ((app && app.sprintConfig) || DEFAULT.sprintConfig).weeksPerSprint * 7;
+}
+
+function fmt(d) {
+  return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()] + ' ' + d.getDate();
+}
+
+// ═══════════════════════════════════════════════════════
+// DEFAULT DATA
+// ═══════════════════════════════════════════════════════
+
+// <<DATA_START>>
+const DEFAULT = {
+  "groupLabel": "PRODUCT / PLATFORM",
+  "title": "2026 PRODUCT ROADMAP",
+  "nextId": 24,
+  "sprintConfig": {
+    "start": "2026-01-05",
+    "weeksPerSprint": 2,
+    "totalSprints": 26
+  },
+  "categories": [
+    { "id": "platform", "name": "Platform", "color": "#2e86de" },
+    { "id": "growth",   "name": "Growth",   "color": "#e67e22" },
+    { "id": "mobile",   "name": "Mobile",   "color": "#8e44ad" },
+    { "id": "data",     "name": "Data & AI","color": "#16a085" }
+  ],
+  "items": [
+    { "id": 1,  "name": "Onboarding Revamp",              "s": 0,    "e": 3,    "status": "completed",   "row": 0,  "category": "platform" },
+    { "id": 2,  "name": "Search Relevance Engine",        "s": 0,    "e": 3,    "status": "completed",   "row": 1,  "category": "data" },
+    { "id": 3,  "name": "Notification Center",            "s": 0,    "e": 2,    "status": "completed",   "row": 2,  "category": "platform" },
+    { "id": 4,  "name": "Referral Program",                "s": 0,    "e": 2,    "status": "completed",   "row": 3,  "category": "growth", "notes": "Referral loop shipped to 100% of users" },
+    { "id": 5,  "name": "⭐ Checkout Redesign",             "s": 2,    "e": 5,    "status": "completed",   "row": 4,  "category": "growth", "notes": "+1 sprint — payment gateway migration", "tv": 1, "pre": 0 },
+    { "id": 6,  "name": "Dashboard Performance Uplift",    "s": 6,    "e": 9,    "status": "completed",   "row": 2,  "category": "platform" },
+    { "id": 7,  "name": "⭐ Mobile App Revamp",             "s": 9,    "e": 14,   "status": "in-progress", "row": 5,  "category": "mobile", "notes": "Full navigation + design system rewrite", "tv": 1, "pre": 0.5 },
+    { "id": 8,  "name": "⭐ Recommendation Engine v2",      "s": 11,   "e": 15,   "status": "in-progress", "row": 6,  "category": "data",   "notes": "", "tv": 1, "pre": 0 },
+    { "id": 9,  "name": "Push Notifications 2.0",         "s": 10,   "e": 12,   "status": "in-progress", "row": 7,  "category": "mobile" },
+    { "id": 10, "name": "⭐ Multi-Currency Support",        "s": 13,   "e": 15,   "status": "in-progress", "row": 4,  "category": "growth", "notes": "Requirement sent to finance team", "tv": 1, "pre": 0.5 },
+    { "id": 11, "name": "Billing & Invoicing Overhaul",    "s": 11,   "e": 14.5, "status": "delayed",     "row": 8,  "category": "platform", "notes": "+1 sprint — vendor API delay", "tv": 1, "pre": 0 },
+    { "id": 12, "name": "Customer Data Platform",          "s": 10,   "e": 13,   "status": "delayed",     "row": 9,  "category": "data",   "notes": "Blocked on data governance review", "tv": 1, "pre": 0 },
+    { "id": 13, "name": "Loyalty Points System",           "s": 14,   "e": 17,   "status": "not-started", "row": 10, "category": "growth", "notes": "", "tv": 1, "pre": 0.5 },
+    { "id": 14, "name": "Dark Mode & Accessibility",       "s": 13,   "e": 15,   "status": "not-started", "row": 11, "category": "platform", "notes": "", "tv": 1, "pre": 0.5 },
+    { "id": 15, "name": "In-App Messaging",                "s": 16,   "e": 18,   "status": "not-started", "row": 12, "category": "mobile", "notes": "", "tv": 1, "pre": 0.5 },
+    { "id": 16, "name": "🎨 Design System 2.0",             "s": 14,   "e": 17,   "status": "in-progress", "row": 13, "category": "platform", "notes": "Tokens + component library refresh", "tv": 1, "pre": 0 },
+    { "id": 17, "name": "⭐ Fraud Detection ML Model",       "s": 16,   "e": 18,   "status": "not-started", "row": 6,  "category": "data",   "notes": "Requirement sent to risk team", "tv": 1, "pre": 0.5 },
+    { "id": 18, "name": "Subscription Plans Revamp",       "s": 15,   "e": 17,   "status": "not-started", "row": 3,  "category": "growth", "notes": "", "tv": 1, "pre": 0.5 },
+    { "id": 19, "name": "Offline Mode",                    "s": 15,   "e": 17,   "status": "not-started", "row": 7,  "category": "mobile", "notes": "", "tv": 1, "pre": 0.5 },
+    { "id": 20, "name": "⭐ Personalization Engine",         "s": 20,   "e": 22,   "status": "not-started", "row": 5,  "category": "mobile", "notes": "", "tv": 1, "pre": 0.5 },
+    { "id": 21, "name": "Data Warehouse Migration",        "s": 18.5, "e": 19.5, "status": "not-started", "row": 9,  "category": "data",   "notes": "Migration to the new lakehouse architecture", "tv": 1, "pre": 0.5 },
+    { "id": 22, "name": "⭐ Partner API v2",                 "s": 24,   "e": 25,   "status": "not-started", "row": 8,  "category": "platform", "notes": "Requirement sent to partnerships team", "tv": 1, "pre": 0.5 },
+    { "id": 23, "name": "Automated Forecast Reports",      "s": 15,   "e": 16,   "status": "not-started", "row": 9,  "category": "data",   "notes": "", "tv": 1, "pre": 0.5 }
+  ]
+};
+// <<DATA_END>>
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// No localStorage — DEFAULT embedded in the HTML is the source of truth.
+// app is a deep-copy mutated in RAM; saveHTML() writes it back to disk.
+// ═══════════════════════════════════════════════════════
+let app        = JSON.parse(JSON.stringify(DEFAULT));
+let dirty      = false;
+let fileHandle = null; // File System Access API handle
+
+function markDirty() {
+  dirty = true;
+  _updateSaveBtn();
+}
+
+function markClean() {
+  dirty = false;
+  _updateSaveBtn();
+}
+
+function _updateSaveBtn() {
+  const btn = document.getElementById('btnSave');
+  if (!btn) return;
+  btn.classList.toggle('dirty', dirty);
+  btn.textContent = dirty ? '💾 Save *' : '💾 Save';
+  btn.title = 'Salvar roadmap';
+}
+
+window.addEventListener('beforeunload', e => {
+  if (!dirty) return;
+  e.preventDefault();
+  e.returnValue = 'Há alterações não salvas. Tem certeza que deseja sair?';
+});
+
+// ═══════════════════════════════════════════════════════
+// THEME (dark / light)
+// ═══════════════════════════════════════════════════════
+function toggleTheme() {
+  const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('roadmap_theme', next); } catch (e) {}
+}
+
+// ═══════════════════════════════════════════════════════
+// INDEXEDDB — persiste o file handle entre sessões
+// ═══════════════════════════════════════════════════════
+const _IDB = {
+  async _open() {
+    return new Promise((ok, fail) => {
+      const r = indexedDB.open('roadmap_hcm', 1);
+      r.onupgradeneeded = e => e.target.result.createObjectStore('fh');
+      r.onsuccess = e => ok(e.target.result);
+      r.onerror   = () => fail(r.error);
+    });
+  },
+  async get(key) {
+    try {
+      const db = await this._open();
+      return new Promise(ok => {
+        const r = db.transaction('fh').objectStore('fh').get(key);
+        r.onsuccess = () => ok(r.result ?? null);
+        r.onerror   = () => ok(null);
+      });
+    } catch { return null; }
+  },
+  async set(key, val) {
+    try {
+      const db = await this._open();
+      await new Promise((ok, fail) => {
+        const tx = db.transaction('fh', 'readwrite');
+        tx.objectStore('fh').put(val, key);
+        tx.oncomplete = ok; tx.onerror = fail;
+      });
+    } catch {}
+  },
+  async del(key) {
+    try {
+      const db = await this._open();
+      const tx = db.transaction('fh', 'readwrite');
+      tx.objectStore('fh').delete(key);
+    } catch {}
+  },
+};
+
+async function initSavedHandle() {
+  if (!('showSaveFilePicker' in window)) return;
+  const h = await _IDB.get('handle');
+  if (!h) return;
+  try {
+    await h.queryPermission({ mode: 'readwrite' }); // valida que o handle ainda existe
+    fileHandle = h;
+    _updateSaveBtn();
+  } catch {
+    await _IDB.del('handle'); // handle inválido — descarta
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// RESPONSIVE SPRINT WIDTH
+// ═══════════════════════════════════════════════════════
+function calcSprintW() {
+  const cm = document.getElementById('chartMain');
+  if (!cm || !cm.clientWidth) return 60;
+  return Math.max(48, Math.floor(cm.clientWidth / SPRINT_COUNT));
+}
+
+// ═══════════════════════════════════════════════════════
+// PROGRESS
+// ═══════════════════════════════════════════════════════
+function getProgress() {
+  const n = app.items.length;
+  if (!n) return { done: 0, prog: 0 };
+  return {
+    done: Math.round(app.items.filter(i => i.status === 'completed').length   / n * 100),
+    prog: Math.round(app.items.filter(i => i.status === 'in-progress').length / n * 100),
+  };
+}
+
+function updateProgress() {
+  const p = getProgress();
+  const d = document.getElementById('pbDone');
+  const g = document.getElementById('pbProg');
+  d.style.width = p.done + '%';
+  d.textContent = p.done > 9 ? p.done + '%' : '';
+  g.style.width = p.prog + '%';
+  g.textContent = p.prog > 9 ? p.prog + '%' : '';
+  const today0 = new Date(); today0.setHours(0,0,0,0);
+  const curIdx = SPRINTS.findIndex(sp => { const nxt = new Date(sp.start); nxt.setDate(nxt.getDate() + _sprintDays()); return today0 >= sp.start && today0 < nxt; });
+  const wip = curIdx >= 0
+    ? app.items.filter(i => i.s <= curIdx && i.e >= curIdx).length
+    : app.items.filter(i => i.status === 'in-progress').length;
+  const w = document.getElementById('wipCount');
+  if (w) w.textContent = wip ? 'WIP: ' + wip : '';
+}
+
+// ═══════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════
+function numRows() {
+  if (!app.items.length) return 1;
+  return Math.max(...app.items.map(i => i.row)) + 1;
+}
+
+let _roSetup = false;
+function renderAll() {
+  SPRINT_W = calcSprintW();
+  renderTitle();
+  renderGroupLabel();
+  renderHeader();
+  renderGantt();
+  updateProgress();
+
+  if (!_roSetup) {
+    const cm = document.getElementById('chartMain');
+    if (cm) {
+      let _rt;
+      new ResizeObserver(() => { clearTimeout(_rt); _rt = setTimeout(renderAll, 120); }).observe(cm);
+      _roSetup = true;
+    }
+  }
+}
+
+function renderTitle() {
+  const el = document.getElementById('titleText');
+  if (document.activeElement !== el) el.textContent = app.title || '2026 PRODUCT ROADMAP';
+}
+
+function renderGroupLabel() {
+  document.getElementById('groupLabelText').textContent = app.groupLabel || 'PRODUCT / PLATFORM';
+}
+
+function renderHeader() {
+  const qRow   = document.getElementById('quarterRow');
+  const sRow   = document.getElementById('sprintRow');
+  const totalW = SPRINT_COUNT * SPRINT_W;
+  qRow.style.width = sRow.style.width = totalW + 'px';
+  qRow.innerHTML   = sRow.innerHTML   = '';
+
+  getQuarterGroups().forEach(qg => {
+    const w    = qg.count * SPRINT_W;
+    const cell = document.createElement('div');
+    cell.className = 'quarter-cell';
+    cell.style.cssText = `width:${w}px; min-width:${w}px;`;
+    cell.textContent   = 'Q' + qg.q;
+    qRow.appendChild(cell);
+  });
+
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const spDays = _sprintDays();
+  SPRINTS.forEach((sp, i) => {
+    const nextStart = new Date(sp.start); nextStart.setDate(nextStart.getDate() + spDays);
+    const isCurrent = today >= sp.start && today < nextStart;
+    const daysLeft  = isCurrent ? Math.round((sp.end - today) / 86400000) : 0;
+    const cell = document.createElement('div');
+    cell.className = 'sprint-cell'
+      + (sp.idx === selSprint ? ' selected' : '')
+      + (isCurrent ? ' current-sprint' : '');
+    cell.style.cssText = `width:${SPRINT_W}px; min-width:${SPRINT_W}px;`;
+    cell.innerHTML = `
+      <div class="sc-num">S${sp.num}</div>
+      <div class="sc-date">${fmt(sp.start)}</div>
+      <div class="sc-date">${fmt(sp.end)}</div>
+      ${isCurrent ? `<div class="sc-countdown">${daysLeft > 0 ? daysLeft + 'd left' : 'Last day'}</div>` : ''}`;
+    cell.addEventListener('click', () => {
+      selSprint = selSprint === sp.idx ? null : sp.idx;
+      selRow = null;
+      renderHeader();
+      renderGantt();
+    });
+    sRow.appendChild(cell);
+  });
+}
+
+let _tipTimer = null;
+let _tipEl    = null;
+function _showTip(text, x, y) {
+  _hideTip();
+  const el = document.createElement('div');
+  el.className = 'bar-tooltip';
+  el.textContent = text;
+  document.body.appendChild(el);
+  _tipEl = el;
+  const vw = window.innerWidth, vh = window.innerHeight;
+  const tw = Math.min(300, vw - 24);
+  el.style.maxWidth = tw + 'px';
+  const ex = x + 14 + tw > vw ? x - tw - 6 : x + 14;
+  const ey = y + 14 + el.offsetHeight > vh ? y - el.offsetHeight - 6 : y + 14;
+  el.style.left = ex + 'px';
+  el.style.top  = ey + 'px';
+}
+function _hideTip() {
+  clearTimeout(_tipTimer);
+  if (_tipEl) { _tipEl.remove(); _tipEl = null; }
+}
+
+// ─── Label fitting ────────────────────────────────────────────────────────
+// Three-pass algorithm: (1) single line 11→8px, (2) balanced 2-line wrap
+// 11→8px, (3) forced 2-line truncation at 8px. Uses an off-screen canvas
+// for pixel-accurate text measurement without touching the real DOM.
+const _mc = document.createElement('canvas').getContext('2d');
+
+function _wrap2(text, maxW, ctx) {
+  const words = text.split(/\s+/);
+  if (words.length < 2) return null;
+  let best = null, bestScore = Infinity;
+  for (let i = 1; i < words.length; i++) {
+    const l1 = words.slice(0, i).join(' ');
+    const l2 = words.slice(i).join(' ');
+    const w1 = ctx.measureText(l1).width;
+    const w2 = ctx.measureText(l2).width;
+    if (w1 <= maxW && w2 <= maxW) {
+      const score = Math.abs(w1 - w2);
+      if (score < bestScore) { bestScore = score; best = [l1, l2]; }
+    }
+  }
+  return best;
+}
+
+function _trunc2(text, maxW, ctx) {
+  const words = text.split(/\s+/);
+  const lines = ['', ''];
+  let li = 0;
+  for (const word of words) {
+    if (li > 1) break;
+    const next = lines[li] ? lines[li] + ' ' + word : word;
+    if (ctx.measureText(next).width <= maxW) {
+      lines[li] = next;
+    } else if (li === 0) {
+      li = 1;
+      if (ctx.measureText(word).width <= maxW) { lines[1] = word; }
+      else { // single word too wide — truncate it
+        let t = word;
+        while (t.length > 1 && ctx.measureText(t + '…').width > maxW) t = t.slice(0, -1);
+        lines[1] = t + '…'; break;
+      }
+    } else {
+      let t = lines[1] + '…';
+      while (t.length > 1 && ctx.measureText(t).width > maxW) t = t.slice(0, -2) + '…';
+      lines[1] = t; break;
+    }
+  }
+  return lines[1] ? lines[0] + '\n' + lines[1] : lines[0];
+}
+
+function _fitLabel(name, barW) {
+  const MIN = 8, MAX = 11, avail = barW - 12;
+  // Pass 1: single line, largest → smallest font
+  for (let sz = MAX; sz >= MIN; sz--) {
+    _mc.font = `bold ${sz}px Arial`;
+    if (_mc.measureText(name).width <= avail) return { text: name, sz, wrap: false };
+  }
+  // Pass 2: 2-line wrap, largest → smallest font
+  for (let sz = MAX; sz >= MIN; sz--) {
+    _mc.font = `bold ${sz}px Arial`;
+    const w = _wrap2(name, avail, _mc);
+    if (w) return { text: w[0] + '\n' + w[1], sz, wrap: true };
+  }
+  // Fallback: force-truncate into 2 lines at minimum font
+  _mc.font = `bold ${MIN}px Arial`;
+  return { text: _trunc2(name, avail, _mc), sz: MIN, wrap: true };
+}
+
+function renderGantt() {
+  _hideTip();
+  const grid  = document.getElementById('ganttGrid');
+  const items = _filteredItems();
+
+  // When a category filter is active, remap sparse rows to a compact sequence
+  // so the filtered view has no empty gap rows. Identity map (empty) otherwise.
+  if (_filterCat) {
+    const usedRows = [...new Set(items.map(i => i.row))].sort((a, b) => a - b);
+    _rowMap = new Map(usedRows.map((r, idx) => [r, idx]));
+  } else {
+    _rowMap = new Map();
+  }
+
+  const rows   = _filterCat ? (_rowMap.size || 1) : numRows();
+  const totalW = SPRINT_COUNT * SPRINT_W;
+  const totalH = rows * ROW_H;
+
+  grid.style.width  = totalW + 'px';
+  grid.style.height = totalH + 'px';
+  grid.innerHTML    = '';
+
+  for (let r = 0; r < rows; r++) {
+    const d = document.createElement('div');
+    d.className    = 'row-bg';
+    d.style.top    = (r * ROW_H) + 'px';
+    d.style.background = r % 2 === 0 ? 'var(--row-stripe)' : 'transparent';
+    grid.appendChild(d);
+  }
+
+  for (let i = 0; i <= SPRINT_COUNT; i++) {
+    const line = document.createElement('div');
+    line.className = 'grid-vline';
+    line.style.left       = (i * SPRINT_W) + 'px';
+    line.style.background = Q_BOUNDARIES.has(i) ? 'var(--grid-line-strong)' : 'var(--grid-line)';
+    grid.appendChild(line);
+  }
+
+  (() => {
+    const now  = new Date();
+    const s0   = SPRINTS[0].start;
+    const sEnd = SPRINTS[SPRINT_COUNT - 1].end;
+    if (now < s0 || now > sEnd) return;
+    const frac = (now - s0) / (sEnd - s0 + 86400000);
+    const x    = frac * totalW;
+    const tl   = document.createElement('div');
+    tl.className   = 'today-line';
+    tl.style.left  = x + 'px';
+    const tip  = document.createElement('div');
+    tip.className  = 'today-tip';
+    tip.style.left = x + 'px';
+    tip.textContent = 'Today';
+    grid.appendChild(tl);
+    grid.appendChild(tip);
+  })();
+
+  items.forEach(item => {
+    const x     = item.s * SPRINT_W;
+    const w     = (item.e - item.s + 1) * SPRINT_W;
+    const top   = (_rowMap.get(item.row) ?? item.row) * ROW_H + BAR_TOP;
+    const color = _statusColor(item.status);
+
+    // Discovery bracket "|—" — separate grid element, NOT a child of the bar.
+    // Because it's a sibling, it is only repositioned on full re-renders.
+    // mouseup always calls renderGantt() after a drag to keep it in sync.
+    const pre = item.pre || 0;
+    if (pre > 0) {
+      const preW = pre * SPRINT_W;
+      const preX = x - preW;
+      if (preX >= 0) {
+        const preDiv = document.createElement('div');
+        preDiv.className = 'pre-dev-block';
+        preDiv.style.cssText = `left:${preX}px;width:${preW}px;top:${top}px;height:34px;`;
+        const vline = document.createElement('div');
+        vline.className = 'pre-dev-vline';
+        const hline = document.createElement('div');
+        hline.className = 'pre-dev-hline';
+        preDiv.appendChild(vline);
+        preDiv.appendChild(hline);
+        grid.appendChild(preDiv);
+      }
+    }
+
+    const bar = document.createElement('div');
+    bar.className    = 'gantt-bar' + (selectedIds.has(item.id) ? ' bar-selected' : '');
+    bar.dataset.id   = item.id;
+    bar.dataset.cat  = item.category || '';
+    bar.style.cssText = `left:${x}px;width:${w}px;top:${top}px;background:${color};`;
+
+    // T&V — CSS repeating-linear-gradient stripe overlay (no extra color,
+    // just white diagonal lines over the existing status color).
+    const tv = item.tv || 0;
+    if (tv > 0) {
+      const tvW = Math.min(tv * SPRINT_W, w - 2);
+      const overlay = document.createElement('div');
+      overlay.className = 'tv-overlay';
+      overlay.style.width = tvW + 'px';
+      bar.appendChild(overlay);
+    }
+
+    const label = _fitLabel(item.name, w);
+    const txt   = document.createElement('div');
+    txt.className  = 'bar-text';
+    txt.style.fontSize = label.sz + 'px';
+    if (label.wrap) txt.style.whiteSpace = 'pre-line';
+    txt.textContent = label.text;
+    bar.appendChild(txt);
+
+    const lh = document.createElement('div');
+    lh.className = 'rh l'; lh.dataset.id = item.id; lh.dataset.side = 'l';
+    bar.appendChild(lh);
+
+    const rh = document.createElement('div');
+    rh.className = 'rh r'; rh.dataset.id = item.id; rh.dataset.side = 'r';
+    bar.appendChild(rh);
+
+    if (item.notes) {
+      bar.addEventListener('mouseenter', e => {
+        _tipTimer = setTimeout(() => _showTip(item.notes, e.clientX, e.clientY), 1000);
+      });
+      bar.addEventListener('mouseleave', _hideTip);
+      bar.addEventListener('mousemove', e => {
+        clearTimeout(_tipTimer);
+        if (!_tipEl) _tipTimer = setTimeout(() => _showTip(item.notes, e.clientX, e.clientY), 1000);
+      });
+    }
+
+    grid.appendChild(bar);
+  });
+
+  // Row highlight
+  if (selRow !== null && selRow < rows) {
+    const hl = document.createElement('div');
+    hl.className  = 'row-hl';
+    hl.style.top    = (selRow * ROW_H) + 'px';
+    hl.style.height = ROW_H + 'px';
+    grid.appendChild(hl);
+  }
+  // Column highlight
+  if (selSprint !== null) {
+    const hl = document.createElement('div');
+    hl.className  = 'col-hl';
+    hl.style.left  = (selSprint * SPRINT_W) + 'px';
+    hl.style.width = SPRINT_W + 'px';
+    hl.style.height = totalH + 'px';
+    grid.appendChild(hl);
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// DRAG & DROP
+// All horizontal movement snaps to ½-sprint increments (stored as .5 floats).
+// Three drag modes:
+//   move   — whole bar moves; row changes on Y axis.
+//   resize — left/right handle extends/shrinks the bar.
+//   lasso  — rubber-band rectangle selects multiple bars.
+// Multi-select (Ctrl+click or lasso) enables bulk move with multiDrag.
+// ═══════════════════════════════════════════════════════
+let drag        = null;
+let didMove     = false;
+let selRow      = null;
+let selSprint   = null;
+let selectedIds = new Set();
+let _clipboard  = [];
+let _history    = [];
+const _HIST_MAX = 40;
+function _pushHistory() {
+  _history.push(JSON.stringify(app.items));
+  if (_history.length > _HIST_MAX) _history.shift();
+}
+let lasso       = null;
+let multiDrag   = null;
+let _filterCat  = null;          // active category filter id, or null
+let _rowMap     = new Map();     // original_row → display_row (set by renderGantt)
+
+function _filteredItems() {
+  if (!_filterCat) return app.items;
+  return app.items.filter(i => i.category === _filterCat);
+}
+
+document.addEventListener('mousedown', e => {
+  didMove = false;
+  const handle = e.target.closest('.rh');
+  const bar    = e.target.closest('.gantt-bar');
+
+  if (handle) {
+    if (_filterCat) return;
+    e.preventDefault();
+    const item = app.items.find(i => i.id == handle.dataset.id);
+    if (!item) return;
+    _pushHistory();
+    drag = { type: 'resize', side: handle.dataset.side, item,
+             startX: e.clientX, origS: item.s, origE: item.e };
+    return;
+  }
+  if (bar) {
+    if (_filterCat) return; // click-to-edit still fires via the click listener
+    e.preventDefault();
+    const item = app.items.find(i => i.id == bar.dataset.id);
+    if (!item) return;
+    if (selectedIds.has(item.id) && selectedIds.size > 1) {
+      _pushHistory();
+      multiDrag = {
+        items: [...selectedIds].map(id => {
+          const it = app.items.find(i => i.id === id);
+          return { item: it, origS: it.s, origE: it.e, origRow: it.row };
+        }),
+        startX: e.clientX, startY: e.clientY
+      };
+      document.querySelectorAll('.gantt-bar.bar-selected').forEach(el => el.classList.add('drag'));
+      return;
+    }
+    _pushHistory();
+    drag = { type: 'move', item, el: bar,
+             startX: e.clientX, startY: e.clientY,
+             origS: item.s, origE: item.e, origRow: item.row };
+    bar.classList.add('drag');
+    return;
+  }
+  // Lasso on empty gantt area
+  const grid = document.getElementById('ganttGrid');
+  if (!grid || !grid.contains(e.target)) return;
+  if (_filterCat) return;
+  e.preventDefault();
+  const rect = grid.getBoundingClientRect();
+  const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
+  const el = document.createElement('div');
+  el.className = 'lasso-rect';
+  el.style.cssText = `left:${sx}px;top:${sy}px;width:0;height:0;`;
+  grid.appendChild(el);
+  lasso = { sx, sy, el, rect };
+});
+
+document.addEventListener('mousemove', e => {
+  if (multiDrag) {
+    didMove = true;
+    const ds = Math.round((e.clientX - multiDrag.startX) / (SPRINT_W / 2)) * 0.5;
+    const dr = Math.round((e.clientY - multiDrag.startY) / ROW_H);
+    multiDrag.items.forEach(({ item, origS, origE, origRow }) => {
+      const dur = origE - origS;
+      let ns = Math.round((origS + ds) * 2) / 2;
+      let ne = Math.round((ns + dur) * 2) / 2;
+      let nr = Math.max(0, origRow + dr);
+      if (ns < 0) { ns = 0; ne = Math.round(dur * 2) / 2; }
+      if (ne > SPRINT_COUNT - 0.5) { ne = SPRINT_COUNT - 0.5; ns = Math.round((ne - dur) * 2) / 2; }
+      item.s = ns; item.e = ne; item.row = nr;
+      const el = document.querySelector(`.gantt-bar[data-id="${item.id}"]`);
+      if (el) {
+        el.style.left  = (ns * SPRINT_W) + 'px';
+        el.style.width = ((ne - ns + 1) * SPRINT_W) + 'px';
+        el.style.top   = (nr * ROW_H + BAR_TOP) + 'px';
+      }
+    });
+    return;
+  }
+
+  if (lasso) {
+    didMove = true;
+    const x = e.clientX - lasso.rect.left, y = e.clientY - lasso.rect.top;
+    const lx = Math.min(x, lasso.sx), ly = Math.min(y, lasso.sy);
+    const lw = Math.abs(x - lasso.sx), lh = Math.abs(y - lasso.sy);
+    lasso.el.style.cssText = `left:${lx}px;top:${ly}px;width:${lw}px;height:${lh}px;`;
+    app.items.forEach(item => {
+      const bx = item.s * SPRINT_W, bw = (item.e - item.s + 1) * SPRINT_W;
+      const by = item.row * ROW_H + BAR_TOP;
+      const hit = lx < bx + bw && lx + lw > bx && ly < by + 34 && ly + lh > by;
+      const el = document.querySelector(`.gantt-bar[data-id="${item.id}"]`);
+      if (el) el.classList.toggle('bar-selected', hit);
+    });
+    return;
+  }
+
+  if (!drag) return;
+  didMove = true;
+  const sw = SPRINT_W, dx = e.clientX - drag.startX;
+  // All drags snap to ½-sprint increments
+  const ds = Math.round(dx / (sw / 2)) * 0.5;
+  const item = drag.item;
+  if (drag.type === 'move') {
+    const dr  = Math.round((e.clientY - drag.startY) / ROW_H);
+    const dur = drag.origE - drag.origS;
+    let ns = Math.round((drag.origS + ds) * 2) / 2;
+    let ne = Math.round((ns + dur) * 2) / 2;
+    let nr = Math.max(0, drag.origRow + dr);
+    if (ns < 0) { ns = 0; ne = Math.round(dur * 2) / 2; }
+    if (ne > SPRINT_COUNT - 0.5) { ne = SPRINT_COUNT - 0.5; ns = Math.round((ne - dur) * 2) / 2; }
+    item.s = ns; item.e = ne; item.row = nr;
+    const el = document.querySelector(`.gantt-bar[data-id="${item.id}"]`);
+    if (el) {
+      el.style.left  = (ns * sw) + 'px';
+      el.style.width = ((ne - ns + 1) * sw) + 'px';
+      el.style.top   = (nr * ROW_H + BAR_TOP) + 'px';
+    }
+  } else {
+    if (drag.side === 'r') {
+      // Right handle snaps to ½-sprint increments
+      item.e = Math.round(Math.max(item.s, Math.min(SPRINT_COUNT - 0.5, drag.origE + ds)) * 2) / 2;
+    } else {
+      // Left handle also snaps to ½-sprint increments
+      item.s = Math.round(Math.max(0, Math.min(item.e, drag.origS + ds)) * 2) / 2;
+    }
+    const el = document.querySelector(`.gantt-bar[data-id="${item.id}"]`);
+    if (el) {
+      el.style.left  = (item.s * sw) + 'px';
+      el.style.width = ((item.e - item.s + 1) * sw) + 'px';
+    }
+  }
+});
+
+document.addEventListener('mouseup', () => {
+  if (multiDrag) {
+    document.querySelectorAll('.gantt-bar.drag').forEach(el => el.classList.remove('drag'));
+    // renderGantt re-syncs Discovery blocks and T&V overlays that live outside the bar element
+    if (didMove) { markDirty(); renderGantt(); }
+    multiDrag = null;
+    return;
+  }
+  if (lasso) {
+    const lx = parseFloat(lasso.el.style.left), ly = parseFloat(lasso.el.style.top);
+    const lw = parseFloat(lasso.el.style.width), lh = parseFloat(lasso.el.style.height);
+    selectedIds.clear();
+    app.items.forEach(item => {
+      const bx = item.s * SPRINT_W, bw = (item.e - item.s + 1) * SPRINT_W;
+      const by = item.row * ROW_H + BAR_TOP;
+      if (lx < bx + bw && lx + lw > bx && ly < by + 34 && ly + lh > by) selectedIds.add(item.id);
+    });
+    lasso.el.remove();
+    lasso = null;
+    renderGantt();
+    return;
+  }
+  if (!drag) return;
+  if (drag.el) drag.el.classList.remove('drag');
+  // renderGantt re-syncs Discovery blocks and T&V overlays that live outside the bar element
+  if (didMove) { markDirty(); renderGantt(); }
+  drag = null;
+});
+
+document.addEventListener('click', e => {
+  if (didMove) return;
+  if (e.target.closest('.rh')) return;
+  const bar = e.target.closest('.gantt-bar');
+  if (bar) {
+    const id = parseInt(bar.dataset.id);
+    if (e.ctrlKey || e.metaKey) {
+      if (selectedIds.has(id)) selectedIds.delete(id); else selectedIds.add(id);
+      renderGantt();
+      return;
+    }
+    if (selectedIds.size > 0) { selectedIds.clear(); renderGantt(); return; }
+    const item = app.items.find(i => i.id == id);
+    if (item) openEditModal(item);
+    return;
+  }
+  const grid = document.getElementById('ganttGrid');
+  if (grid && grid.contains(e.target)) {
+    if (selectedIds.size > 0) { selectedIds.clear(); renderGantt(); return; }
+    const rect = grid.getBoundingClientRect();
+    const r = Math.floor((e.clientY - rect.top) / ROW_H);
+    selRow = (selRow === r) ? null : r;
+    selSprint = null;
+    renderHeader();
+    renderGantt();
+  }
+});
+
+document.addEventListener('keydown', e => {
+  // Escape — close topmost open modal, clear filter, or clear bar selection
+  if (e.key === 'Escape') {
+    if (document.getElementById('catOverlay').classList.contains('open'))   { closeCatModal();   return; }
+    if (document.getElementById('overlay').classList.contains('open'))      { closeModal();      return; }
+    if (document.getElementById('groupOverlay').classList.contains('open')) { closeGroupModal(); return; }
+    if (_filterCat) { _filterCat = null; renderCatLegend(); renderGantt(); return; }
+    if (selectedIds.size > 0) { selectedIds.clear(); renderGantt(); }
+    return;
+  }
+
+  const active    = document.activeElement;
+  const typing    = active.tagName === 'INPUT' || active.tagName === 'TEXTAREA' || active.isContentEditable;
+  const modalOpen = document.getElementById('catOverlay').classList.contains('open')
+                 || document.getElementById('overlay').classList.contains('open')
+                 || document.getElementById('groupOverlay').classList.contains('open');
+
+  // Ctrl+Z — undo
+  if (e.key === 'z' && (e.ctrlKey || e.metaKey) && !e.shiftKey && !typing) {
+    e.preventDefault();
+    if (_history.length === 0) { showToast('Nada para desfazer'); return; }
+    app.items = JSON.parse(_history.pop());
+    selectedIds.clear();
+    renderAll();
+    showToast(`↩ Undo  (${_history.length} restante${_history.length !== 1 ? 's' : ''})`);
+    return;
+  }
+
+  if (typing || modalOpen) return;
+
+  // Del — delete selected items
+  if ((e.key === 'Delete' || e.key === 'Backspace') && selectedIds.size > 0) {
+    e.preventDefault();
+    _pushHistory();
+    app.items = app.items.filter(i => !selectedIds.has(i.id));
+    selectedIds.clear();
+    markDirty(); renderAll();
+    return;
+  }
+
+  // Ctrl+C — copy selected to internal clipboard
+  if (e.key === 'c' && (e.ctrlKey || e.metaKey) && selectedIds.size > 0) {
+    e.preventDefault();
+    _clipboard = app.items.filter(i => selectedIds.has(i.id)).map(i => ({ ...i }));
+    showToast(`✓ ${_clipboard.length} item(s) copiado(s) — Ctrl+V para colar`);
+    return;
+  }
+
+  // Ctrl+V — paste with +1 sprint offset
+  if (e.key === 'v' && (e.ctrlKey || e.metaKey) && _clipboard.length > 0) {
+    e.preventDefault();
+    _pushHistory();
+    const maxId  = app.items.reduce((m, i) => Math.max(m, i.id), 0);
+    const pasted = _clipboard.map((item, idx) => ({
+      ...item,
+      id: maxId + idx + 1,
+      s:  Math.min(item.s + 1, SPRINT_COUNT - 1),
+      e:  Math.min(item.e + 1, SPRINT_COUNT - 1),
+    }));
+    app.items.push(...pasted);
+    selectedIds.clear();
+    pasted.forEach(i => selectedIds.add(i.id));
+    markDirty(); renderAll();
+    showToast(`✓ ${pasted.length} item(s) colado(s)`);
+    return;
+  }
+});
+
+// ═══════════════════════════════════════════════════════
+// MODAL
+// ═══════════════════════════════════════════════════════
+let currentId = null;
+
+function buildSprintSelect(sel, selected) {
+  sel.innerHTML = '';
+  SPRINTS.forEach((sp, i) => {
+    const o = document.createElement('option');
+    o.value       = i;
+    o.textContent = `S${sp.num}  ${fmt(sp.start)} – ${fmt(sp.end)}`;
+    if (i === Math.floor(selected)) o.selected = true;
+    sel.appendChild(o);
+  });
+}
+
+function openEditModal(item) {
+  currentId = item.id;
+  document.getElementById('modalTitle').textContent    = 'Edit Item';
+  document.getElementById('fName').value               = item.name;
+  buildSprintSelect(document.getElementById('fStart'), item.s);
+  buildSprintSelect(document.getElementById('fEnd'),   item.e);
+  document.getElementById('fTV').value                 = item.tv   || 0;
+  document.getElementById('fPre').value                = item.pre  || 0;
+  document.getElementById('fStatus').value             = item.status;
+  document.getElementById('fCategory').value           = item.category || '';
+  document.getElementById('fNotes').value              = item.notes || '';
+  document.getElementById('btnDel').style.display      = '';
+  document.getElementById('overlay').classList.add('open');
+  setTimeout(() => document.getElementById('fName').focus(), 40);
+}
+
+function openAddModal() {
+  currentId = null;
+  document.getElementById('modalTitle').textContent    = 'Add Item';
+  document.getElementById('fName').value               = '';
+  buildSprintSelect(document.getElementById('fStart'), 0);
+  buildSprintSelect(document.getElementById('fEnd'),   1);
+  document.getElementById('fTV').value                 = 0;
+  document.getElementById('fPre').value                = 0;
+  document.getElementById('fStatus').value             = 'not-started';
+  document.getElementById('fCategory').value           = '';
+  document.getElementById('fNotes').value              = '';
+  document.getElementById('btnDel').style.display      = 'none';
+  document.getElementById('overlay').classList.add('open');
+  setTimeout(() => document.getElementById('fName').focus(), 40);
+}
+
+function closeModal() { document.getElementById('overlay').classList.remove('open'); }
+function overlayBg(e) { if (e.target === document.getElementById('overlay')) closeModal(); }
+
+function saveItem() {
+  const name     = document.getElementById('fName').value.trim();
+  const s = parseInt(document.getElementById('fStart').value);
+  const e = parseInt(document.getElementById('fEnd').value);
+  const tv       = parseFloat(document.getElementById('fTV').value) || 0;
+  const pre      = parseFloat(document.getElementById('fPre').value) || 0;
+  const status   = document.getElementById('fStatus').value;
+  const category = document.getElementById('fCategory').value;
+  const notes    = document.getElementById('fNotes').value.trim();
+  // Row: preserve existing for edits; auto-assign for new items
+  const existingItem = currentId !== null ? app.items.find(i => i.id === currentId) : null;
+  const row = existingItem ? existingItem.row : numRows();
+
+  if (!name) { alert('Name is required.'); return; }
+  if (e < s)  { alert('End Sprint must be ≥ Start Sprint.'); return; }
+  if (tv > 0 && tv >= (e - s + 1)) { alert('T&V duration must be less than total bar length.'); return; }
+
+  _pushHistory();
+  if (currentId !== null) {
+    const item = app.items.find(i => i.id === currentId);
+    if (item) Object.assign(item, { name, s, e, tv, pre, status, category, row, notes });
+  } else {
+    app.items.push({ id: app.nextId++, name, s, e, tv, pre, status, category, row, notes });
+  }
+  markDirty(); renderAll(); closeModal();
+}
+
+function deleteItem() {
+  if (!confirm('Delete this item?')) return;
+  _pushHistory();
+  app.items = app.items.filter(i => i.id !== currentId);
+  markDirty(); renderAll(); closeModal();
+}
+
+document.getElementById('groupLabel').addEventListener('click', () => {
+  document.getElementById('fGroupLabel').value = app.groupLabel || '';
+  document.getElementById('groupOverlay').classList.add('open');
+  setTimeout(() => document.getElementById('fGroupLabel').focus(), 40);
+});
+function closeGroupModal() { document.getElementById('groupOverlay').classList.remove('open'); }
+function groupOverlayBg(e) { if (e.target === document.getElementById('groupOverlay')) closeGroupModal(); }
+function saveGroupLabel() {
+  app.groupLabel = document.getElementById('fGroupLabel').value.trim() || 'PRODUCT / PLATFORM';
+  markDirty(); renderGroupLabel(); closeGroupModal();
+}
+
+document.getElementById('titleText').addEventListener('blur', () => {
+  const newTitle = document.getElementById('titleText').textContent.trim() || '2026 PRODUCT ROADMAP';
+  if (newTitle !== app.title) { app.title = newTitle; markDirty(); }
+});
+document.getElementById('titleText').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); document.getElementById('titleText').blur(); }
+});
+
+// ═══════════════════════════════════════════════════════
+// 💾 SAVE HTML
+// Serialises `app` back into the HTML file between the DATA markers.
+// Prefers the File System Access API (Chrome/Edge) for in-place writes.
+// Falls back to a download on unsupported browsers (Firefox).
+// Shift+click = "Save As": forgets the current file handle.
+//
+// _buildHTML() injects the JSON by replacing the // <<DATA_START>> …
+// // <<DATA_END>> block. It escapes "</" to prevent script-close injection.
+// ═══════════════════════════════════════════════════════
+function _buildHTML(template) {
+  const dataStr = JSON.stringify(app, null, 2)
+    .replace(/<\//g, '<\\/'); // escape script-close tags inside JSON string values
+  const marker = /\/\/ <<DATA_START>>[\s\S]*?\/\/ <<DATA_END>>/;
+  const src    = template || _TEMPLATE;
+  const html   = src.replace(marker, () =>
+    `// <<DATA_START>>\nconst DEFAULT = ${dataStr};\n// <<DATA_END>>`);
+  return html === src ? null : html; // null = marker not found (open wrong file)
+}
+
+async function saveHTML(e) {
+  // Shift+click = "Save As": esquece arquivo vinculado e abre picker
+  if (e && e.shiftKey) {
+    fileHandle = null;
+    await _IDB.del('handle');
+    _updateSaveBtn();
+  }
+
+  // Prefer reading from disk (via existing fileHandle) so we don't rely on
+  // outerHTML serialisation, which can mangle the DATA markers in some browsers.
+  let diskTemplate = null;
+  if (fileHandle) {
+    try {
+      const f = await fileHandle.getFile();
+      diskTemplate = await f.text();
+    } catch { /* permission not yet granted — fall back to _TEMPLATE */ }
+  }
+
+  const html = _buildHTML(diskTemplate);
+  if (!html) {
+    alert('Save error: data marker not found. Re-open the original roadmap.html.');
+    return;
+  }
+
+  // ── File System Access API (Chrome / Edge) ──────────
+  if ('showSaveFilePicker' in window) {
+    try {
+      // 1. Sem handle: abre picker uma única vez
+      if (!fileHandle) {
+        fileHandle = await window.showSaveFilePicker({
+          suggestedName: 'roadmap.html',
+          types: [{ description: 'HTML File', accept: { 'text/html': ['.html'] } }],
+        });
+        await _IDB.set('handle', fileHandle); // persiste para próximas sessões
+        _updateSaveBtn();
+      }
+
+      // 2. Garante permissão de escrita (pode pedir ao usuário se sessão nova)
+      let perm = await fileHandle.queryPermission({ mode: 'readwrite' });
+      if (perm !== 'granted') {
+        perm = await fileHandle.requestPermission({ mode: 'readwrite' });
+      }
+      if (perm !== 'granted') {
+        showToast('⚠️ Permissão de escrita negada pelo browser.');
+        return;
+      }
+
+      // 3. Escreve diretamente no arquivo
+      const writable = await fileHandle.createWritable();
+      await writable.write(html);
+      await writable.close();
+      markClean();
+      showToast(`✓ Salvo: ${fileHandle.name}`);
+      return;
+
+    } catch (err) {
+      if (err.name === 'AbortError') return; // usuário cancelou
+      // Handle corrompido — limpa e cai no fallback
+      fileHandle = null;
+      await _IDB.del('handle');
+      _updateSaveBtn();
+    }
+  }
+
+  // ── Fallback: download (Firefox / sem suporte) ──────
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = Object.assign(document.createElement('a'), { href: url, download: 'roadmap.html' });
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  markClean();
+  showToast('✓ roadmap.html baixado — substitua na pasta compartilhada.');
+}
+
+// ═══════════════════════════════════════════════════════
+// 📷 COPY TO CLIPBOARD  (canvas)
+// ═══════════════════════════════════════════════════════
+function rrect(ctx, x, y, w, h, r) {
+  r = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y,     x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x,     y + h, r);
+  ctx.arcTo(x,     y + h, x,     y,     r);
+  ctx.arcTo(x,     y,     x + w, y,     r);
+  ctx.closePath();
+}
+
+function _canvasTheme() {
+  const light = document.documentElement.getAttribute('data-theme') === 'light';
+  return light ? {
+    bg: '#f4f5f7', text: '#1c1e21', dim: '#5b5f66', dim2: '#8a8f98',
+    sep: '#cfd2d8', gold: '#9a6b00',
+    progressTrack: '#dcdde2',
+    quarterBg: '#e3e4e8', quarterBorder: '#d4d6db',
+    sprintBg: '#e9eaed', sprintBorder: '#dfe1e5',
+    sprintCurBg: 'rgba(154,107,0,.10)', sprintCurBorder: 'rgba(154,107,0,.45)',
+    rowStripe: 'rgba(0,0,0,.03)', gridLine: '#e4e5e8', gridLineStrong: '#cfd2d8',
+    todayLine: 'rgba(192,57,43,.7)',
+    filterBadgeBg: 'rgba(154,107,0,.15)', filterBadgeBorder: 'rgba(154,107,0,.5)',
+  } : {
+    bg: '#111', text: '#fff', dim: '#bbb', dim2: '#777',
+    sep: '#3a3a3a', gold: '#FFD700',
+    progressTrack: '#444',
+    quarterBg: '#000', quarterBorder: '#444',
+    sprintBg: '#1a1a1a', sprintBorder: '#2a2a2a',
+    sprintCurBg: 'rgba(255,215,0,.08)', sprintCurBorder: 'rgba(255,215,0,.4)',
+    rowStripe: 'rgba(255,255,255,.02)', gridLine: '#1e1e1e', gridLineStrong: '#3a3a3a',
+    todayLine: 'rgba(255,100,100,.7)',
+    filterBadgeBg: 'rgba(255,215,0,.15)', filterBadgeBorder: 'rgba(255,215,0,.55)',
+  };
+}
+
+async function copyScreen() {
+  const CT = _canvasTheme();
+  const GW = 52, SW = SPRINT_W, RH = ROW_H;
+  const TITLE_H = 56, LEG_H = 28, QH = 30, SPH = 46;
+  const cvItems = _filteredItems();
+  const rows    = _filterCat ? (_rowMap.size || 1) : numRows();
+  const CW = SPRINT_COUNT * SW;
+  const W  = GW + CW;
+  const H  = TITLE_H + LEG_H + QH + SPH + rows * RH + 10;
+  const SC = 2;
+
+  const canvas = document.createElement('canvas');
+  canvas.width  = W * SC; canvas.height = H * SC;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(SC, SC);
+
+  ctx.fillStyle = CT.bg; ctx.fillRect(0, 0, W, H);
+
+  // Title — left-aligned from x=8, same as app
+  let tx = 8;
+  ctx.fillStyle = CT.text; ctx.font = 'bold 24px Arial';
+  ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+  const titleStr = app.title || '2026 PRODUCT ROADMAP';
+  ctx.fillText(titleStr, tx, TITLE_H / 2);
+  tx += ctx.measureText(titleStr).width + 20;
+
+  // Progress bar — rounded via clip
+  const p = getProgress();
+  const pbY = (TITLE_H - 24) / 2, pbW = 180, pbH = 24, pbR = 5;
+  const pbX = tx;
+  ctx.save();
+  ctx.beginPath(); rrect(ctx, pbX, pbY, pbW, pbH, pbR); ctx.clip();
+  ctx.fillStyle = CT.progressTrack; ctx.fillRect(pbX, pbY, pbW, pbH);
+  if (p.done > 0) {
+    ctx.fillStyle = '#4CAF50'; ctx.fillRect(pbX, pbY, pbW * p.done / 100, pbH);
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 10px Arial';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(p.done + '%', pbX + pbW * p.done / 200, pbY + pbH / 2);
+  }
+  if (p.prog > 0) {
+    const ox = pbX + pbW * p.done / 100;
+    ctx.fillStyle = '#4a90d9'; ctx.fillRect(ox, pbY, pbW * p.prog / 100, pbH);
+    ctx.fillStyle = '#fff'; ctx.font = 'bold 10px Arial';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(p.prog + '%', ox + pbW * p.prog / 200, pbY + pbH / 2);
+  }
+  ctx.restore();
+
+  // WIP counter (right of progress bar, same row)
+  {
+    const today0cv = new Date(); today0cv.setHours(0,0,0,0);
+    const curIdxCv = SPRINTS.findIndex(sp => { const nxt = new Date(sp.start); nxt.setDate(nxt.getDate() + _sprintDays()); return today0cv >= sp.start && today0cv < nxt; });
+    const wipCv = curIdxCv >= 0
+      ? app.items.filter(i => i.s <= curIdxCv && i.e >= curIdxCv).length
+      : app.items.filter(i => i.status === 'in-progress').length;
+    if (wipCv) {
+      ctx.fillStyle = CT.dim2; ctx.font = '10px Arial';
+      ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText('WIP: ' + wipCv, pbX + pbW + 10, pbY + pbH / 2);
+    }
+  }
+
+  let y = TITLE_H;
+
+  // Legend row — status dots
+  const lgds = [
+    { color: '#4CAF50', label: 'Completed' }, { color: '#4a90d9', label: 'In progress' },
+    { color: '#e74c3c', label: 'Delayed' },   { color: _statusColor('not-started'), label: 'Not Started' },
+  ];
+  ctx.font = '11px Arial'; let lx = 10;
+  lgds.forEach(l => {
+    ctx.fillStyle = l.color; ctx.beginPath(); ctx.arc(lx + 5, y + 14, 5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = CT.dim; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(l.label, lx + 14, y + 14); lx += ctx.measureText(l.label).width + 32;
+  });
+  // Category legend — corner triangle (matches the triangle rendered on each bar)
+  if (app.categories && app.categories.length) {
+    ctx.strokeStyle = CT.sep; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(lx + 2, y + 7); ctx.lineTo(lx + 2, y + 21); ctx.stroke();
+    lx += 14;
+    ctx.font = '11px Arial';
+    app.categories.forEach(cat => {
+      const ts = 11;
+      ctx.fillStyle = cat.color;
+      ctx.beginPath(); ctx.moveTo(lx, y + 6); ctx.lineTo(lx + ts, y + 6); ctx.lineTo(lx, y + 6 + ts); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = CT.dim; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText(cat.name, lx + ts + 4, y + 14);
+      lx += ts + 4 + ctx.measureText(cat.name).width + 14;
+    });
+  }
+
+  // T&V indicator
+  {
+    ctx.strokeStyle = CT.sep; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(lx + 2, y + 7); ctx.lineTo(lx + 2, y + 21); ctx.stroke();
+    lx += 14;
+    const tvBx = lx, tvBy = y + 8, tvBw = 18, tvBh = 10;
+    ctx.fillStyle = _statusColor('not-started');
+    ctx.beginPath(); rrect(ctx, tvBx, tvBy, tvBw, tvBh, 2); ctx.fill();
+    ctx.save();
+    ctx.beginPath(); rrect(ctx, tvBx, tvBy, tvBw, tvBh, 2); ctx.clip();
+    ctx.strokeStyle = 'rgba(255,255,255,.3)'; ctx.lineWidth = 1.5;
+    for (let sx = tvBx - tvBh; sx < tvBx + tvBw + tvBh; sx += 5) {
+      ctx.beginPath(); ctx.moveTo(sx, tvBy); ctx.lineTo(sx + tvBh, tvBy + tvBh); ctx.stroke();
+    }
+    ctx.restore();
+    ctx.fillStyle = CT.dim; ctx.font = '11px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText('T&V', lx + tvBw + 4, y + 14);
+    lx += tvBw + 4 + ctx.measureText('T&V').width + 14;
+  }
+
+  // Discovery indicator ("|—" bracket)
+  {
+    ctx.strokeStyle = CT.sep; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(lx + 2, y + 7); ctx.lineTo(lx + 2, y + 21); ctx.stroke();
+    lx += 14;
+    ctx.strokeStyle = CT.text === '#fff' ? 'rgba(255,255,255,.55)' : 'rgba(0,0,0,.5)'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(lx + 2, y + 7); ctx.lineTo(lx + 2, y + 21); ctx.stroke();
+    ctx.strokeStyle = CT.text === '#fff' ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.32)'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(lx + 2, y + 14); ctx.lineTo(lx + 12, y + 14); ctx.stroke();
+    ctx.fillStyle = CT.dim; ctx.font = '11px Arial'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText('Discovery', lx + 16, y + 14);
+    lx += 16 + ctx.measureText('Discovery').width + 14;
+  }
+
+  // Active filter badge (category), right side of legend row
+  if (_filterCat) {
+    const cat = (app.categories || []).find(c => c.id === _filterCat);
+    if (cat) {
+      const label = 'Filtro: ' + cat.name;
+      ctx.font = 'bold 11px Arial';
+      const tw = ctx.measureText(label).width;
+      const fx = W - tw - 22, fy = y + 14;
+      ctx.fillStyle = CT.filterBadgeBg; ctx.fillRect(fx - 8, fy - 10, tw + 16, 20);
+      ctx.strokeStyle = CT.filterBadgeBorder; ctx.lineWidth = 1; ctx.strokeRect(fx - 8, fy - 10, tw + 16, 20);
+      ctx.fillStyle = CT.gold; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText(label, fx, fy);
+    }
+  }
+  y += LEG_H;
+
+  // Group label
+  ctx.save();
+  ctx.fillStyle = CT.quarterBg; ctx.fillRect(0, TITLE_H + LEG_H, GW, QH + SPH + rows * RH + 10);
+  ctx.fillStyle = CT.text; ctx.font = 'bold 13px Arial';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.translate(GW / 2, TITLE_H + LEG_H + QH + SPH + (rows * RH) / 2);
+  ctx.rotate(-Math.PI / 2); ctx.fillText(app.groupLabel || 'PRODUCT / PLATFORM', 0, 0);
+  ctx.restore();
+
+  // Quarter header
+  ctx.fillStyle = CT.quarterBg; ctx.fillRect(GW, y, CW, QH);
+  getQuarterGroups().forEach(qg => {
+    const qx = GW + qg.start * SW, qw = qg.count * SW;
+    ctx.strokeStyle = CT.quarterBorder; ctx.lineWidth = 1; ctx.strokeRect(qx, y, qw, QH);
+    ctx.fillStyle = CT.gold; ctx.font = 'bold 13px Arial';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('Q' + qg.q, qx + qw / 2, y + QH / 2);
+  });
+  y += QH;
+
+  // Sprint header
+  ctx.fillStyle = CT.sprintBg; ctx.fillRect(GW, y, CW, SPH);
+  const todayCvs = new Date(); todayCvs.setHours(0, 0, 0, 0);
+  const cvSpDays = _sprintDays();
+  SPRINTS.forEach((sp, i) => {
+    const sx = GW + i * SW;
+    const nxt = new Date(sp.start); nxt.setDate(nxt.getDate() + cvSpDays);
+    const isCur = todayCvs >= sp.start && todayCvs < nxt;
+    if (isCur) { ctx.fillStyle = CT.sprintCurBg; ctx.fillRect(sx, y, SW, SPH); }
+    ctx.strokeStyle = isCur ? CT.sprintCurBorder : CT.sprintBorder;
+    ctx.lineWidth = 1; ctx.strokeRect(sx, y, SW, SPH);
+    ctx.fillStyle = CT.text; ctx.font = 'bold 9px Arial';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('S' + sp.num, sx + SW / 2, y + 3);
+    ctx.fillStyle = CT.dim2; ctx.font = '7px Arial';
+    ctx.fillText(fmt(sp.start), sx + SW / 2, y + 15);
+    ctx.fillText(fmt(sp.end),   sx + SW / 2, y + 25);
+    if (isCur) {
+      const dl = Math.round((sp.end - todayCvs) / 86400000);
+      ctx.fillStyle = CT.gold; ctx.font = 'bold 7px Arial';
+      ctx.fillText(dl > 0 ? dl + 'd left' : 'Last day', sx + SW / 2, y + 36);
+    }
+  });
+  y += SPH;
+
+  // Rows + lines
+  for (let r = 0; r < rows; r++) {
+    if (r % 2 === 0) { ctx.fillStyle = CT.rowStripe; ctx.fillRect(GW, y + r * RH, CW, RH); }
+  }
+  for (let i = 0; i <= SPRINT_COUNT; i++) {
+    ctx.strokeStyle = Q_BOUNDARIES.has(i) ? CT.gridLineStrong : CT.gridLine; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(GW + i * SW, y); ctx.lineTo(GW + i * SW, y + rows * RH); ctx.stroke();
+  }
+
+  // Today
+  const now0 = new Date(), s0 = SPRINTS[0].start, sEnd = SPRINTS[SPRINT_COUNT - 1].end;
+  if (now0 >= s0 && now0 <= sEnd) {
+    const fx = (now0 - s0) / (sEnd - s0 + 86400000);
+    const tx = GW + fx * CW;
+    ctx.strokeStyle = CT.todayLine; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(tx, y); ctx.lineTo(tx, y + rows * RH); ctx.stroke();
+  }
+
+  // Bars (with T&V overlay and pre-dev block)
+  cvItems.forEach(item => {
+    const bx = GW + item.s * SW + 2, bw = (item.e - item.s + 1) * SW - 4;
+    const by = y + (_rowMap.get(item.row) ?? item.row) * RH + BAR_TOP, bh = 34;
+    const color = _statusColor(item.status);
+
+    // Discovery bracket "|—" on canvas
+    const pre = item.pre || 0;
+    if (pre > 0) {
+      const preW = pre * SW;
+      const preX = GW + (item.s - pre) * SW;
+      if (preX >= GW) {
+        const midY = by + bh / 2;
+        ctx.strokeStyle = CT.text === '#fff' ? 'rgba(255,255,255,.55)' : 'rgba(0,0,0,.5)'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(preX + 1, by + 3); ctx.lineTo(preX + 1, by + bh - 3); ctx.stroke();
+        ctx.strokeStyle = CT.text === '#fff' ? 'rgba(255,255,255,.35)' : 'rgba(0,0,0,.32)'; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.moveTo(preX + 1, midY); ctx.lineTo(preX + preW, midY); ctx.stroke();
+      }
+    }
+
+    // Main bar
+    ctx.fillStyle = color; rrect(ctx, bx, by, bw, bh, 4); ctx.fill();
+    // Category corner triangle
+    const catEntry = (app.categories || []).find(c => c.id === item.category);
+    const catColor = catEntry ? catEntry.color : null;
+    if (catColor) {
+      const triSize = 11;
+      ctx.save();
+      ctx.beginPath(); rrect(ctx, bx, by, bw, bh, 4); ctx.clip();
+      ctx.fillStyle = catColor;
+      ctx.beginPath();
+      ctx.moveTo(bx, by); ctx.lineTo(bx + triSize, by); ctx.lineTo(bx, by + triSize);
+      ctx.closePath(); ctx.fill();
+      ctx.restore();
+    }
+
+    // T&V diagonal stripes (clipped to TV region only, matching DOM tvW formula)
+    const tv = item.tv || 0;
+    if (tv > 0) {
+      const tvW = Math.min(tv * SW, bw - 2);
+      const tvX = bx + bw - tvW;
+      ctx.save();
+      ctx.beginPath(); rrect(ctx, bx, by, bw, bh, 4); ctx.clip(); // rounded bar edges
+      ctx.beginPath(); ctx.rect(tvX, by - 1, tvW + 1, bh + 2); ctx.clip(); // TV region only
+      ctx.strokeStyle = 'rgba(255,255,255,.22)'; ctx.lineWidth = 2;
+      for (let sx = tvX - bh; sx < tvX + tvW + bh; sx += 8) {
+        ctx.beginPath(); ctx.moveTo(sx, by); ctx.lineTo(sx + bh, by + bh); ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // Smart label fitting (same logic as DOM render)
+    const lbl = _fitLabel(item.name, bw - 4);
+    ctx.font = `bold ${lbl.sz}px Arial`;
+    ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    if (lbl.wrap) {
+      const [t1, t2] = lbl.text.split('\n');
+      const lhh = lbl.sz * 1.35;
+      ctx.fillText(t1, bx + bw / 2, by + bh / 2 - lhh / 2);
+      ctx.fillText(t2 || '', bx + bw / 2, by + bh / 2 + lhh / 2);
+    } else {
+      ctx.fillText(lbl.text, bx + bw / 2, by + bh / 2);
+    }
+  });
+
+  canvas.toBlob(async blob => {
+    if (!blob) { showToast('Erro ao gerar imagem.'); return; }
+    try {
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+      showToast('✓ Imagem copiada! Cole com Ctrl+V no e-mail.');
+    } catch {
+      const url = URL.createObjectURL(blob);
+      const a = Object.assign(document.createElement('a'), { href: url, download: 'roadmap_2026.png' });
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 200);
+      showToast('Download feito — anexe no e-mail.');
+    }
+  }, 'image/png');
+}
+
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className   = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ═══════════════════════════════════════════════════════
+// CATEGORIES
+// ═══════════════════════════════════════════════════════
+function renderCatStyles() {
+  const el = document.getElementById('catStyles');
+  if (!el) return;
+  el.textContent = (app.categories || []).map(cat =>
+    `.gantt-bar[data-cat="${cat.id}"]::before {
+      content:''; position:absolute; top:0; left:0; z-index:5; pointer-events:none;
+      width:0; height:0; border-style:solid;
+      border-width:11px 11px 0 0;
+      border-color:${cat.color} transparent transparent transparent;
+      border-radius:3px 0 0 0;
+    }`
+  ).join('\n');
+}
+
+function renderCatLegend() {
+  const el = document.getElementById('catLegend');
+  if (!el) return;
+  el.innerHTML = '';
+  (app.categories || []).forEach(cat => {
+    const div = document.createElement('div');
+    div.className = 'legend-item legend-cat-filter' + (_filterCat === cat.id ? ' filter-active' : '');
+    div.title     = _filterCat === cat.id ? 'Click to clear filter' : 'Click to filter by ' + cat.name;
+    div.innerHTML = `<span style="width:0;height:0;border-style:solid;border-width:11px 11px 0 0;border-color:${cat.color} transparent transparent transparent;display:inline-block;flex-shrink:0"></span>${cat.name}`;
+    div.addEventListener('click', () => {
+      _filterCat = (_filterCat === cat.id) ? null : cat.id;
+      selRow = null; selSprint = null; selectedIds.clear();
+      renderCatLegend();
+      renderHeader();
+      renderGantt();
+    });
+    el.appendChild(div);
+  });
+}
+
+function buildCatSelect() {
+  const sel = document.getElementById('fCategory');
+  if (!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">— None —</option>';
+  (app.categories || []).forEach(cat => {
+    const o = document.createElement('option');
+    o.value = cat.id; o.textContent = cat.name;
+    sel.appendChild(o);
+  });
+  sel.value = cur;
+}
+
+function _applyCategories() {
+  renderCatStyles(); renderCatLegend(); buildCatSelect(); markDirty();
+}
+
+function showSettingsTab(tab) {
+  document.getElementById('tabCat').style.display = tab === 'cat' ? '' : 'none';
+  document.getElementById('tabSpr').style.display = tab === 'spr' ? '' : 'none';
+  document.getElementById('tabBtnCat').classList.toggle('tab-active', tab === 'cat');
+  document.getElementById('tabBtnSpr').classList.toggle('tab-active', tab === 'spr');
+}
+
+function openCatModal() {
+  renderCatList();
+  showSettingsTab('cat');
+  document.getElementById('newCatName').value  = '';
+  document.getElementById('newCatColor').value = '#3498db';
+  // Pre-fill sprint config
+  const cfg = app.sprintConfig || DEFAULT.sprintConfig;
+  document.getElementById('cfgStart').value = cfg.start;
+  document.getElementById('cfgWeeks').value = cfg.weeksPerSprint;
+  document.getElementById('cfgTotal').value = cfg.totalSprints;
+  _updateCoveredUntil();
+  document.getElementById('catOverlay').classList.add('open');
+}
+function closeCatModal() { document.getElementById('catOverlay').classList.remove('open'); }
+function catOverlayBg(e) { if (e.target === document.getElementById('catOverlay')) closeCatModal(); }
+
+function _autoFillSprints() {
+  const raw   = document.getElementById('cfgStart').value;
+  const weeks = parseInt(document.getElementById('cfgWeeks').value);
+  if (!raw || isNaN(weeks)) return;
+  const start   = _parseLocalDate(raw);
+  const yearEnd = new Date(start.getFullYear(), 11, 31); // Dec 31 of the sprint's year
+  const total   = Math.max(1, Math.floor((yearEnd - start) / 86400000 / (weeks * 7)) + 1);
+  document.getElementById('cfgTotal').value = total;
+  _updateCoveredUntil();
+}
+
+function _updateCoveredUntil() {
+  const raw   = document.getElementById('cfgStart').value;
+  const weeks = parseInt(document.getElementById('cfgWeeks').value);
+  const total = parseInt(document.getElementById('cfgTotal').value);
+  const el    = document.getElementById('cfgCoveredUntil');
+  if (!el || !raw || isNaN(weeks) || isNaN(total)) return;
+  const start = _parseLocalDate(raw);
+  const end   = new Date(start);
+  end.setDate(end.getDate() + weeks * 7 * total - 1);
+  el.textContent = end.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+function applySprintConfig() {
+  const start        = document.getElementById('cfgStart').value;
+  const weeksPerSprint = parseInt(document.getElementById('cfgWeeks').value);
+  const totalSprints   = parseInt(document.getElementById('cfgTotal').value);
+  if (!start || isNaN(weeksPerSprint) || isNaN(totalSprints) || totalSprints < 1) return;
+  // Clamp items that fall outside the new sprint range
+  app.items.forEach(item => {
+    item.s = Math.min(item.s, totalSprints - 1);
+    item.e = Math.min(item.e, totalSprints - 1);
+    if (item.s > item.e) item.s = item.e;
+  });
+  app.sprintConfig = { start, weeksPerSprint, totalSprints };
+  rebuildSprints();
+  renderAll();
+  markDirty();
+  showToast('✓ Sprint configuration updated');
+}
+
+function renderCatList() {
+  const list = document.getElementById('catList');
+  if (!list) return;
+  list.innerHTML = '';
+  (app.categories || []).forEach(cat => {
+    const row = document.createElement('div');
+    row.className = 'cat-row';
+    row.innerHTML =
+      `<span class="cat-swatch" style="border-color:${cat.color}"></span>` +
+      `<input class="cat-name-input" data-catid="${cat.id}" value="${cat.name.replace(/"/g,'&quot;')}">` +
+      `<input class="cat-color-input" type="color" data-catid="${cat.id}" value="${cat.color}">` +
+      `<button class="cat-del-btn" data-catid="${cat.id}">✕</button>`;
+    const [swatch, nameInp, colorInp, delBtn] = row.children;
+    nameInp.addEventListener('change', () => {
+      const cat = (app.categories || []).find(c => c.id === nameInp.dataset.catid);
+      if (cat && nameInp.value.trim()) { cat.name = nameInp.value.trim(); _applyCategories(); }
+    });
+    colorInp.addEventListener('input', () => {
+      const cat = (app.categories || []).find(c => c.id === colorInp.dataset.catid);
+      if (cat) { cat.color = colorInp.value; swatch.style.borderColor = colorInp.value; _applyCategories(); renderGantt(); }
+    });
+    const catId = cat.id, catName = cat.name;
+    delBtn.addEventListener('click', () => {
+      if (!confirm(`Remove category "${catName}"? Items will lose this category.`)) return;
+      app.categories = (app.categories || []).filter(c => c.id !== catId);
+      app.items.forEach(i => { if (i.category === catId) i.category = ''; });
+      _applyCategories(); renderGantt(); renderCatList();
+    });
+    list.appendChild(row);
+  });
+}
+
+function addCategory() {
+  const name = document.getElementById('newCatName').value.trim();
+  if (!name) return;
+  const color = document.getElementById('newCatColor').value;
+  const id = 'cat_' + Date.now();
+  if (!app.categories) app.categories = [];
+  app.categories.push({ id, name, color });
+  _applyCategories(); renderCatList();
+  document.getElementById('newCatName').value = '';
+}
+
+// EXPORT / IMPORT JSON
+// ═══════════════════════════════════════════════════════
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(app, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = Object.assign(document.createElement('a'),
+               { href: url, download: 'roadmap_data.json' });
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('✓ JSON exportado.');
+}
+
+function importJSON(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!data.items || !Array.isArray(data.items)) throw new Error('formato inválido');
+      if (!data.sprintConfig) data.sprintConfig = { start: '2026-01-05', weeksPerSprint: 2, totalSprints: 26 };
+      if (!data.categories) data.categories = [
+        { id: 'financial', name: 'Financial', color: '#2ecc71' },
+        { id: 'people',    name: 'People',    color: '#9b59b6' }
+      ];
+      app = data;
+      _filterCat = null;
+      rebuildSprints();
+      renderAll();
+      renderCatStyles(); renderCatLegend(); buildCatSelect();
+      markDirty();
+      showToast('✓ Importado: ' + file.name);
+    } catch(err) {
+      alert('Erro ao importar: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  input.value = '';
+}
+
+// ═══════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════
+rebuildSprints();
+renderAll();
+renderCatStyles(); renderCatLegend(); buildCatSelect();
+initSavedHandle();
+</script></body></html>
