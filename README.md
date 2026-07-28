@@ -26,10 +26,10 @@ Basta abrir o arquivo HTML no navegador e começar a planejar.
 
 Acompanhe o progresso de cada iniciativa utilizando diferentes status:
 
-- 🟢 **Completed** — Concluído
-- 🔵 **In Progress** — Em andamento
-- 🟡 **Delayed** — Atrasado
-- ⚪ **Not Started** — Não iniciado
+- **Completed** — Concluído
+- **In Progress** — Em andamento
+- **Delayed** — Atrasado
+- **Not Started** — Não iniciado
 
 Cada status possui uma representação visual própria para facilitar a leitura do roadmap.
 
