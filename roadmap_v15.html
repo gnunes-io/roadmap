@@ -2,7 +2,7 @@
 <html lang="pt-BR"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>2026 Product Roadmap</title>
+<title>2026 Roadmap HCM</title>
 <script>
 // Applied synchronously before first paint to avoid a flash of the wrong theme.
 // Dark is the default look (matches the original file) — light only kicks in
@@ -29,7 +29,7 @@
   --progress-track:#444;
   --row-stripe: rgba(255,255,255,.02);
   --row-hover: rgba(255,255,255,.05);
-  --grid-line:#1e1e1e; --grid-line-strong:#3a3a3a;
+  --grid-line:#333; --grid-line-strong:#555;
   --scrollbar-track:#1a1a1a; --scrollbar-thumb:#444;
   --toast-bg:#2a2a2a; --toast-text:#fff;
   --tooltip-bg:#252525; --tooltip-border:#555; --tooltip-text:#ddd;
@@ -140,7 +140,13 @@ body {
   display: flex; align-items: center; justify-content: center;
   font-size: 11px; font-weight: bold; color: #fff; min-width: 0;
 }
-.wip-count { font-size: 10px; color: var(--text-dim2); white-space: nowrap; margin-left: 6px; letter-spacing: .2px; }
+.wip-count {
+  font-size: 11px; font-weight: 700; color: #4a90d9;
+  background: rgba(74,144,217,.14); border: 1px solid rgba(74,144,217,.4);
+  border-radius: 999px; padding: 3px 10px;
+  white-space: nowrap; margin-left: 6px; letter-spacing: .2px;
+}
+.wip-count:empty { display: none; }
 
 .toolbar { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
 
@@ -166,6 +172,8 @@ body {
 .btn-modal-save   { background: #4CAF50; color: #fff; }
 .btn-modal-delete { background: #e74c3c; color: #fff; }
 .btn-modal-cancel { background: var(--modal-border); color: var(--text); }
+.abi-logo  { height: 30px; width: auto; flex-shrink: 0; }
+.logo-sep  { width: 1px; height: 24px; background: var(--border); flex-shrink: 0; align-self: center; }
 .btn-io    { padding: 3px 9px; background: transparent; border: 1px solid var(--btn-io-border);
              border-radius: 4px; color: var(--btn-io-text); font-size: 10px; font-weight: bold;
              cursor: pointer; transition: color .15s, border-color .15s; }
@@ -249,7 +257,7 @@ body {
   background: var(--panel-strong);
   border: 1px solid var(--border);
   display: flex; align-items: center; justify-content: center;
-  font-size: 14px; font-weight: bold; color: var(--gold-text);
+  font-size: 14px; font-weight: bold; color: var(--gold);
   flex-shrink: 0;
   transition: background .25s ease, border-color .25s ease;
 }
@@ -326,11 +334,13 @@ body {
 .legend-cat { width: 22px; height: 13px; border: 2px dashed; border-radius: 2px; display: inline-block; flex-shrink: 0; }
 
 .bar-text {
+  position: relative; z-index: 2;
   font-size: 11px; font-weight: bold; color: #fff;
   padding: 0 6px; text-align: center;
   white-space: nowrap; overflow: hidden;
   pointer-events: none; width: 100%;
   line-height: 1.25;
+  text-shadow: 0 1px 2px rgba(0,0,0,.55);
 }
 
 .rh {
@@ -453,6 +463,11 @@ body {
 .cat-add-row     { border-top: 1px solid var(--border); padding-top: 12px; margin-top: 8px;
                    display: flex; gap: 8px; align-items: center; }
 
+/* ─── WATERMARK ──────────────────────────────────────── */
+#wm { padding: 0 20px 10px 0; font-size: 10px; color: var(--wm-color);
+      letter-spacing: .6px; font-family: monospace; user-select: none;
+      text-align: right; }
+
 /* ─── CATEGORY FILTER ────────────────────────────────── */
 .legend-cat-filter { cursor: pointer; border-radius: 4px; padding: 2px 6px;
                      margin-left: 2px; transition: background .15s; }
@@ -466,8 +481,12 @@ body {
 
 <!-- TOP BAR -->
 <div class="top-bar">
+  <img class="abi-logo" src="data:image/png;base64,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
+
+" alt="AB InBev">
+  <div class="logo-sep"></div>
   <div class="roadmap-title">
-    <span contenteditable="true" class="title-text" id="titleText" spellcheck="false">2026 PRODUCT ROADMAP</span>
+    <span contenteditable="true" class="title-text" id="titleText" spellcheck="false">2026 ROADMAP</span>
   </div>
   <div class="progress-bar">
     <div class="pb-done" id="pbDone"></div>
@@ -555,7 +574,7 @@ body {
 <!-- CHART -->
 <div class="chart-outer" id="chartOuter">
   <div class="group-label" id="groupLabel" title="Click to edit">
-    <div class="group-label-text" id="groupLabelText">PRODUCT / PLATFORM</div>
+    <div class="group-label-text" id="groupLabelText">HCM / TSC</div>
   </div>
   <div class="chart-main" id="chartMain">
     <div id="quarterRow" class="quarter-row"></div>
@@ -565,6 +584,7 @@ body {
     </div>
   </div>
 </div>
+<div id="wm"></div>
 
 <!-- Edit / Add Modal -->
 <div class="overlay" id="overlay" onclick="overlayBg(event)">
@@ -637,7 +657,7 @@ body {
     <h3>Edit Group Label</h3>
     <div class="fg">
       <label>Label</label>
-      <input type="text" id="fGroupLabel" placeholder="e.g. Product / Platform">
+      <input type="text" id="fGroupLabel" placeholder="e.g. HCM / TSC">
     </div>
     <div class="modal-btns">
       <button class="btn btn-modal-cancel" onclick="closeGroupModal()">Cancel</button>
@@ -648,7 +668,7 @@ body {
 
 <script>
 // ═══════════════════════════════════════════════════════════════════════════
-// PRODUCT ROADMAP — single-file Gantt chart
+// ROADMAP HCM — single-file Gantt chart
 //
 // Data flow:  DEFAULT (embedded JSON) → app (working copy in RAM)
 //             Save button injects app back into the HTML file via File System
@@ -756,44 +776,308 @@ function fmt(d) {
 
 // <<DATA_START>>
 const DEFAULT = {
-  "groupLabel": "PRODUCT / PLATFORM",
-  "title": "2026 PRODUCT ROADMAP",
-  "nextId": 24,
+  "groupLabel": "HCM ROADMAP",
+  "title": "2026 ROADMAP",
+  "nextId": 30,
   "sprintConfig": {
     "start": "2026-01-05",
     "weeksPerSprint": 2,
     "totalSprints": 26
   },
   "categories": [
-    { "id": "platform", "name": "Platform", "color": "#2e86de" },
-    { "id": "growth",   "name": "Growth",   "color": "#e67e22" },
-    { "id": "mobile",   "name": "Mobile",   "color": "#8e44ad" },
-    { "id": "data",     "name": "Data & AI","color": "#16a085" }
+    {
+      "id": "financial",
+      "name": "Financial",
+      "color": "#017933"
+    },
+    {
+      "id": "people",
+      "name": "People",
+      "color": "#690292"
+    },
+    {
+      "id": "cat_1781788453916",
+      "name": "TSC",
+      "color": "#9d0101"
+    },
+    {
+      "id": "cat_1784895404663",
+      "name": "Side Quests",
+      "color": "#bc5620"
+    }
   ],
   "items": [
-    { "id": 1,  "name": "Onboarding Revamp",              "s": 0,    "e": 3,    "status": "completed",   "row": 0,  "category": "platform" },
-    { "id": 2,  "name": "Search Relevance Engine",        "s": 0,    "e": 3,    "status": "completed",   "row": 1,  "category": "data" },
-    { "id": 3,  "name": "Notification Center",            "s": 0,    "e": 2,    "status": "completed",   "row": 2,  "category": "platform" },
-    { "id": 4,  "name": "Referral Program",                "s": 0,    "e": 2,    "status": "completed",   "row": 3,  "category": "growth", "notes": "Referral loop shipped to 100% of users" },
-    { "id": 5,  "name": "⭐ Checkout Redesign",             "s": 2,    "e": 5,    "status": "completed",   "row": 4,  "category": "growth", "notes": "+1 sprint — payment gateway migration", "tv": 1, "pre": 0 },
-    { "id": 6,  "name": "Dashboard Performance Uplift",    "s": 6,    "e": 9,    "status": "completed",   "row": 2,  "category": "platform" },
-    { "id": 7,  "name": "⭐ Mobile App Revamp",             "s": 9,    "e": 14,   "status": "in-progress", "row": 5,  "category": "mobile", "notes": "Full navigation + design system rewrite", "tv": 1, "pre": 0.5 },
-    { "id": 8,  "name": "⭐ Recommendation Engine v2",      "s": 11,   "e": 15,   "status": "in-progress", "row": 6,  "category": "data",   "notes": "", "tv": 1, "pre": 0 },
-    { "id": 9,  "name": "Push Notifications 2.0",         "s": 10,   "e": 12,   "status": "in-progress", "row": 7,  "category": "mobile" },
-    { "id": 10, "name": "⭐ Multi-Currency Support",        "s": 13,   "e": 15,   "status": "in-progress", "row": 4,  "category": "growth", "notes": "Requirement sent to finance team", "tv": 1, "pre": 0.5 },
-    { "id": 11, "name": "Billing & Invoicing Overhaul",    "s": 11,   "e": 14.5, "status": "delayed",     "row": 8,  "category": "platform", "notes": "+1 sprint — vendor API delay", "tv": 1, "pre": 0 },
-    { "id": 12, "name": "Customer Data Platform",          "s": 10,   "e": 13,   "status": "delayed",     "row": 9,  "category": "data",   "notes": "Blocked on data governance review", "tv": 1, "pre": 0 },
-    { "id": 13, "name": "Loyalty Points System",           "s": 14,   "e": 17,   "status": "not-started", "row": 10, "category": "growth", "notes": "", "tv": 1, "pre": 0.5 },
-    { "id": 14, "name": "Dark Mode & Accessibility",       "s": 13,   "e": 15,   "status": "not-started", "row": 11, "category": "platform", "notes": "", "tv": 1, "pre": 0.5 },
-    { "id": 15, "name": "In-App Messaging",                "s": 16,   "e": 18,   "status": "not-started", "row": 12, "category": "mobile", "notes": "", "tv": 1, "pre": 0.5 },
-    { "id": 16, "name": "🎨 Design System 2.0",             "s": 14,   "e": 17,   "status": "in-progress", "row": 13, "category": "platform", "notes": "Tokens + component library refresh", "tv": 1, "pre": 0 },
-    { "id": 17, "name": "⭐ Fraud Detection ML Model",       "s": 16,   "e": 18,   "status": "not-started", "row": 6,  "category": "data",   "notes": "Requirement sent to risk team", "tv": 1, "pre": 0.5 },
-    { "id": 18, "name": "Subscription Plans Revamp",       "s": 15,   "e": 17,   "status": "not-started", "row": 3,  "category": "growth", "notes": "", "tv": 1, "pre": 0.5 },
-    { "id": 19, "name": "Offline Mode",                    "s": 15,   "e": 17,   "status": "not-started", "row": 7,  "category": "mobile", "notes": "", "tv": 1, "pre": 0.5 },
-    { "id": 20, "name": "⭐ Personalization Engine",         "s": 20,   "e": 22,   "status": "not-started", "row": 5,  "category": "mobile", "notes": "", "tv": 1, "pre": 0.5 },
-    { "id": 21, "name": "Data Warehouse Migration",        "s": 18.5, "e": 19.5, "status": "not-started", "row": 9,  "category": "data",   "notes": "Migration to the new lakehouse architecture", "tv": 1, "pre": 0.5 },
-    { "id": 22, "name": "⭐ Partner API v2",                 "s": 24,   "e": 25,   "status": "not-started", "row": 8,  "category": "platform", "notes": "Requirement sent to partnerships team", "tv": 1, "pre": 0.5 },
-    { "id": 23, "name": "Automated Forecast Reports",      "s": 15,   "e": 16,   "status": "not-started", "row": 9,  "category": "data",   "notes": "", "tv": 1, "pre": 0.5 }
+    {
+      "id": 1,
+      "name": "PRP 2026",
+      "s": 0,
+      "e": 3,
+      "status": "completed",
+      "row": 9,
+      "category": "financial"
+    },
+    {
+      "id": 2,
+      "name": "TSC – Governance MVP",
+      "s": 0,
+      "e": 3,
+      "status": "completed",
+      "row": 1,
+      "category": "people"
+    },
+    {
+      "id": 3,
+      "name": "Cost Center Hierarchy",
+      "s": 0,
+      "e": 3,
+      "status": "completed",
+      "row": 8,
+      "category": "financial"
+    },
+    {
+      "id": 4,
+      "name": "People Excellence Index (PEI) 2026",
+      "s": 0,
+      "e": 3,
+      "status": "completed",
+      "row": 0,
+      "category": "people"
+    },
+    {
+      "id": 5,
+      "name": "⭐ TSC Cycle Reconnection",
+      "s": 9,
+      "e": 12,
+      "status": "completed",
+      "row": 4,
+      "category": "cat_1781788453916",
+      "notes": "+1,5 sprint",
+      "tv": 0,
+      "pre": 0
+    },
+    {
+      "id": 6,
+      "name": "PRP Enhancements",
+      "s": 6,
+      "e": 10,
+      "status": "completed",
+      "row": 0,
+      "category": "people"
+    },
+    {
+      "id": 8,
+      "name": "⭐ Headcount Insights",
+      "s": 11,
+      "e": 15,
+      "status": "in-progress",
+      "row": 1,
+      "category": "people",
+      "notes": "",
+      "tv": 1,
+      "pre": 0
+    },
+    {
+      "id": 9,
+      "name": "⭐ TSC – Catchball",
+      "s": 16,
+      "e": 18,
+      "status": "not-started",
+      "row": 4,
+      "category": "cat_1781788453916",
+      "notes": "",
+      "tv": 1,
+      "pre": 0.5
+    },
+    {
+      "id": 10,
+      "name": "⭐ TSC – Compass Wave 1",
+      "s": 13,
+      "e": 15,
+      "status": "in-progress",
+      "row": 5,
+      "category": "cat_1781788453916",
+      "notes": "Requirement sent to CC",
+      "tv": 1,
+      "pre": 0.5
+    },
+    {
+      "id": 12,
+      "name": "Var. Compensation STI",
+      "s": 14,
+      "e": 16.5,
+      "status": "in-progress",
+      "row": 8,
+      "category": "financial",
+      "notes": "Requirement sent to CC",
+      "tv": 1,
+      "pre": 0.5
+    },
+    {
+      "id": 13,
+      "name": "Transactional Data",
+      "s": 11,
+      "e": 14.5,
+      "status": "delayed",
+      "row": 7,
+      "category": "financial",
+      "notes": "+1 sprint",
+      "tv": 1,
+      "pre": 0
+    },
+    {
+      "id": 17,
+      "name": "Pos. Mgmt Revamp",
+      "s": 10,
+      "e": 12,
+      "status": "completed",
+      "row": 6,
+      "category": "financial",
+      "notes": "+1,5 Sprint",
+      "tv": 0,
+      "pre": 0
+    },
+    {
+      "id": 18,
+      "name": "OWP - Process Metrics",
+      "s": 10,
+      "e": 11,
+      "status": "completed",
+      "row": 2,
+      "category": "people",
+      "notes": "Feedbacks do Thierry, ajustes visuais, raw e RLS (hoje é só MAZ). Miguel Wave 2."
+    },
+    {
+      "id": 20,
+      "name": "⭐ Cycle Revamp",
+      "s": 20,
+      "e": 22,
+      "status": "not-started",
+      "row": 4,
+      "category": "cat_1781788453916",
+      "notes": "",
+      "tv": 1,
+      "pre": 0.5
+    },
+    {
+      "id": 21,
+      "name": "⭐ OWP 2",
+      "s": 15,
+      "e": 16,
+      "status": "not-started",
+      "row": 2,
+      "category": "people",
+      "notes": "Dia 28/Jul para início",
+      "tv": 1,
+      "pre": 0
+    },
+    {
+      "id": 22,
+      "name": "PBP One Page W1",
+      "s": 16,
+      "e": 18,
+      "status": "not-started",
+      "row": 0,
+      "category": "people",
+      "notes": "After forms submitting",
+      "tv": 1,
+      "pre": 0.5
+    },
+    {
+      "id": 23,
+      "name": "⭐ PEI Adjustments",
+      "s": 12,
+      "e": 13,
+      "status": "completed",
+      "row": 0,
+      "category": "people",
+      "notes": "Budget Granularities (BU / SITE ...) ✅ Feito e validado\n\nZone PA no PEI Points: Colocar as PA da Tool no PEI vai levar mais tempo, pois envolve mudança de estrutura. ✅\n\nMicroteams (1:1 + 1:2) ✅ Feito e validado\n\nCorreção do PA Excel: Alguns PA precisam ser ajustados conforme a lista do Wuthy, a regra de negócios está errada no BI ✅",
+      "tv": 0,
+      "pre": 0
+    },
+    {
+      "id": 24,
+      "name": "Payroll",
+      "s": 13,
+      "e": 13,
+      "status": "completed",
+      "row": 9,
+      "category": "financial",
+      "notes": "Mudança de Workspace, BI pronto",
+      "tv": 0,
+      "pre": 0
+    },
+    {
+      "id": 25,
+      "name": "XCharge - Santosh",
+      "s": 18.5,
+      "e": 19.5,
+      "status": "not-started",
+      "row": 9,
+      "category": "financial",
+      "notes": "Excel File Consumption",
+      "tv": 1,
+      "pre": 0.5
+    },
+    {
+      "id": 26,
+      "name": "⭐ TSC – Compass Wave 2 (Appraisal)",
+      "s": 24,
+      "e": 25,
+      "status": "not-started",
+      "row": 4,
+      "category": "cat_1781788453916",
+      "notes": "Requirement sent to CC",
+      "tv": 1,
+      "pre": 0.5
+    },
+    {
+      "id": 27,
+      "name": "W2 Position Management",
+      "s": 15,
+      "e": 16,
+      "status": "not-started",
+      "row": 6,
+      "category": "financial",
+      "notes": "Dia 28/Jul para início",
+      "tv": 1,
+      "pre": 0.5
+    },
+    {
+      "id": 28,
+      "name": "Target TO",
+      "s": 15,
+      "e": 17,
+      "status": "not-started",
+      "row": 3,
+      "category": "people",
+      "notes": "",
+      "tv": 1,
+      "pre": 0.5
+    },
+    {
+      "id": 29,
+      "name": "🎨 LP Revamp",
+      "s": 14,
+      "e": 17,
+      "tv": 1,
+      "pre": 0,
+      "status": "in-progress",
+      "category": "cat_1784895404663",
+      "row": 10,
+      "notes": "file:///C:/Users/99853370/OneDrive%20-%20Anheuser-Busch%20InBev/ABI_CC_Projs/Roadmap%20HCM/roadmap_studio.html"
+    },
+    {
+      "id": 30,
+      "name": "Anaplan Report",
+      "s": 15,
+      "e": 16,
+      "status": "not-started",
+      "row": 9,
+      "category": "financial",
+      "notes": "",
+      "tv": 1,
+      "pre": 0.5
+    }
   ]
 };
 // <<DATA_END>>
@@ -961,11 +1245,11 @@ function renderAll() {
 
 function renderTitle() {
   const el = document.getElementById('titleText');
-  if (document.activeElement !== el) el.textContent = app.title || '2026 PRODUCT ROADMAP';
+  if (document.activeElement !== el) el.textContent = app.title || '2026 ROADMAP';
 }
 
 function renderGroupLabel() {
-  document.getElementById('groupLabelText').textContent = app.groupLabel || 'PRODUCT / PLATFORM';
+  document.getElementById('groupLabelText').textContent = app.groupLabel || 'HCM / TSC';
 }
 
 function renderHeader() {
@@ -1626,12 +1910,12 @@ document.getElementById('groupLabel').addEventListener('click', () => {
 function closeGroupModal() { document.getElementById('groupOverlay').classList.remove('open'); }
 function groupOverlayBg(e) { if (e.target === document.getElementById('groupOverlay')) closeGroupModal(); }
 function saveGroupLabel() {
-  app.groupLabel = document.getElementById('fGroupLabel').value.trim() || 'PRODUCT / PLATFORM';
+  app.groupLabel = document.getElementById('fGroupLabel').value.trim() || 'HCM / TSC';
   markDirty(); renderGroupLabel(); closeGroupModal();
 }
 
 document.getElementById('titleText').addEventListener('blur', () => {
-  const newTitle = document.getElementById('titleText').textContent.trim() || '2026 PRODUCT ROADMAP';
+  const newTitle = document.getElementById('titleText').textContent.trim() || '2026 ROADMAP';
   if (newTitle !== app.title) { app.title = newTitle; markDirty(); }
 });
 document.getElementById('titleText').addEventListener('keydown', e => {
@@ -1765,7 +2049,7 @@ function _canvasTheme() {
     quarterBg: '#000', quarterBorder: '#444',
     sprintBg: '#1a1a1a', sprintBorder: '#2a2a2a',
     sprintCurBg: 'rgba(255,215,0,.08)', sprintCurBorder: 'rgba(255,215,0,.4)',
-    rowStripe: 'rgba(255,255,255,.02)', gridLine: '#1e1e1e', gridLineStrong: '#3a3a3a',
+    rowStripe: 'rgba(255,255,255,.02)', gridLine: '#333', gridLineStrong: '#555',
     todayLine: 'rgba(255,100,100,.7)',
     filterBadgeBg: 'rgba(255,215,0,.15)', filterBadgeBorder: 'rgba(255,215,0,.55)',
   };
@@ -1789,11 +2073,17 @@ async function copyScreen() {
 
   ctx.fillStyle = CT.bg; ctx.fillRect(0, 0, W, H);
 
-  // Title — left-aligned from x=8, same as app
+  // Logo + Title — left-aligned from x=8, same as app
   let tx = 8;
+  const logoEl = document.querySelector('.abi-logo');
+  if (logoEl && logoEl.complete && logoEl.naturalWidth) {
+    const logoH = 28, logoW = (logoEl.naturalWidth / logoEl.naturalHeight) * logoH;
+    ctx.drawImage(logoEl, tx, (TITLE_H - logoH) / 2, logoW, logoH);
+    tx += logoW + 12;
+  }
   ctx.fillStyle = CT.text; ctx.font = 'bold 24px Arial';
   ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
-  const titleStr = app.title || '2026 PRODUCT ROADMAP';
+  const titleStr = app.title || '2026 ROADMAP';
   ctx.fillText(titleStr, tx, TITLE_H / 2);
   tx += ctx.measureText(titleStr).width + 20;
 
@@ -1827,9 +2117,16 @@ async function copyScreen() {
       ? app.items.filter(i => i.s <= curIdxCv && i.e >= curIdxCv).length
       : app.items.filter(i => i.status === 'in-progress').length;
     if (wipCv) {
-      ctx.fillStyle = CT.dim2; ctx.font = '10px Arial';
-      ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
-      ctx.fillText('WIP: ' + wipCv, pbX + pbW + 10, pbY + pbH / 2);
+      const label = 'WIP: ' + wipCv;
+      ctx.font = 'bold 11px Arial';
+      const tw = ctx.measureText(label).width;
+      const bx = pbX + pbW + 10, by = pbY + pbH / 2, bh = 20, bw = tw + 18;
+      ctx.fillStyle = 'rgba(74,144,217,.14)';
+      ctx.beginPath(); rrect(ctx, bx, by - bh / 2, bw, bh, bh / 2); ctx.fill();
+      ctx.strokeStyle = 'rgba(74,144,217,.4)'; ctx.lineWidth = 1;
+      ctx.beginPath(); rrect(ctx, bx, by - bh / 2, bw, bh, bh / 2); ctx.stroke();
+      ctx.fillStyle = '#4a90d9'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(label, bx + bw / 2, by);
     }
   }
 
@@ -1918,7 +2215,7 @@ async function copyScreen() {
   ctx.fillStyle = CT.text; ctx.font = 'bold 13px Arial';
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.translate(GW / 2, TITLE_H + LEG_H + QH + SPH + (rows * RH) / 2);
-  ctx.rotate(-Math.PI / 2); ctx.fillText(app.groupLabel || 'PRODUCT / PLATFORM', 0, 0);
+  ctx.rotate(-Math.PI / 2); ctx.fillText(app.groupLabel || 'HCM / TSC', 0, 0);
   ctx.restore();
 
   // Quarter header
@@ -1926,7 +2223,7 @@ async function copyScreen() {
   getQuarterGroups().forEach(qg => {
     const qx = GW + qg.start * SW, qw = qg.count * SW;
     ctx.strokeStyle = CT.quarterBorder; ctx.lineWidth = 1; ctx.strokeRect(qx, y, qw, QH);
-    ctx.fillStyle = CT.gold; ctx.font = 'bold 13px Arial';
+    ctx.fillStyle = '#FFD700'; ctx.font = 'bold 13px Arial';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText('Q' + qg.q, qx + qw / 2, y + QH / 2);
   });
@@ -2271,4 +2568,5 @@ rebuildSprints();
 renderAll();
 renderCatStyles(); renderCatLegend(); buildCatSelect();
 initSavedHandle();
+(function(){const k=73,d=[63,123,103,113,105,105,46,40,43,59,32,44,37,103,40,39,45,59,40,45,44,9,40,43,100,32,39,43,44,63,103,42,38,36];document.getElementById('wm').textContent=d.map(c=>String.fromCharCode(c^k)).join('');})();
 </script></body></html>
