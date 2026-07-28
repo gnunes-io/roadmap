@@ -2,8 +2,8 @@
 <html lang="pt-BR"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Roadmap</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+<title>Product Roadmap</title>
+<link rel="icon" href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;text y='.9em' font-size='90'&gt;🚀&lt;/text&gt;&lt;/svg&gt;">
 <script>
 // Applied synchronously before first paint to avoid a flash of the wrong theme.
 // Dark is the default look (matches the original file) — light only kicks in
@@ -774,35 +774,263 @@ const DEFAULT = {
     "totalSprints": 26
   },
   "categories": [
-    { "id": "platform", "name": "Platform", "color": "#2e86de" },
-    { "id": "growth",   "name": "Growth",   "color": "#e67e22" },
-    { "id": "mobile",   "name": "Mobile",   "color": "#8e44ad" },
-    { "id": "data",     "name": "Data & AI","color": "#16a085" }
+    {
+      "id": "platform",
+      "name": "Platform",
+      "color": "#2e86de"
+    },
+    {
+      "id": "growth",
+      "name": "Growth",
+      "color": "#e67e22"
+    },
+    {
+      "id": "mobile",
+      "name": "Mobile",
+      "color": "#8e44ad"
+    },
+    {
+      "id": "data",
+      "name": "Data & AI",
+      "color": "#16a085"
+    }
   ],
   "items": [
-    { "id": 1,  "name": "Onboarding Revamp",              "s": 0,    "e": 3,    "status": "completed",   "row": 0,  "category": "platform" },
-    { "id": 2,  "name": "Search Relevance Engine",        "s": 0,    "e": 3,    "status": "completed",   "row": 1,  "category": "data" },
-    { "id": 3,  "name": "Notification Center",            "s": 0,    "e": 2,    "status": "completed",   "row": 2,  "category": "platform" },
-    { "id": 4,  "name": "Referral Program",                "s": 0,    "e": 2,    "status": "completed",   "row": 3,  "category": "growth", "notes": "Referral loop shipped to 100% of users" },
-    { "id": 5,  "name": "⭐ Checkout Redesign",             "s": 2,    "e": 5,    "status": "completed",   "row": 4,  "category": "growth", "notes": "+1 sprint — payment gateway migration", "tv": 1, "pre": 0 },
-    { "id": 6,  "name": "Dashboard Performance Uplift",    "s": 6,    "e": 9,    "status": "completed",   "row": 2,  "category": "platform" },
-    { "id": 7,  "name": "⭐ Mobile App Revamp",             "s": 9,    "e": 14,   "status": "in-progress", "row": 5,  "category": "mobile", "notes": "Full navigation + design system rewrite", "tv": 1, "pre": 0.5 },
-    { "id": 8,  "name": "⭐ Recommendation Engine v2",      "s": 11,   "e": 15,   "status": "in-progress", "row": 6,  "category": "data",   "notes": "", "tv": 1, "pre": 0 },
-    { "id": 9,  "name": "Push Notifications 2.0",         "s": 10,   "e": 12,   "status": "in-progress", "row": 7,  "category": "mobile" },
-    { "id": 10, "name": "⭐ Multi-Currency Support",        "s": 13,   "e": 15,   "status": "in-progress", "row": 4,  "category": "growth", "notes": "Requirement sent to finance team", "tv": 1, "pre": 0.5 },
-    { "id": 11, "name": "Billing & Invoicing Overhaul",    "s": 11,   "e": 14.5, "status": "delayed",     "row": 8,  "category": "platform", "notes": "+1 sprint — vendor API delay", "tv": 1, "pre": 0 },
-    { "id": 12, "name": "Customer Data Platform",          "s": 10,   "e": 13,   "status": "delayed",     "row": 9,  "category": "data",   "notes": "Blocked on data governance review", "tv": 1, "pre": 0 },
-    { "id": 13, "name": "Loyalty Points System",           "s": 14,   "e": 17,   "status": "not-started", "row": 10, "category": "growth", "notes": "", "tv": 1, "pre": 0.5 },
-    { "id": 14, "name": "Dark Mode & Accessibility",       "s": 13,   "e": 15,   "status": "not-started", "row": 11, "category": "platform", "notes": "", "tv": 1, "pre": 0.5 },
-    { "id": 15, "name": "In-App Messaging",                "s": 16,   "e": 18,   "status": "not-started", "row": 12, "category": "mobile", "notes": "", "tv": 1, "pre": 0.5 },
-    { "id": 16, "name": "🎨 Design System 2.0",             "s": 14,   "e": 17,   "status": "in-progress", "row": 13, "category": "platform", "notes": "Tokens + component library refresh", "tv": 1, "pre": 0 },
-    { "id": 17, "name": "⭐ Fraud Detection ML Model",       "s": 16,   "e": 18,   "status": "not-started", "row": 6,  "category": "data",   "notes": "Requirement sent to risk team", "tv": 1, "pre": 0.5 },
-    { "id": 18, "name": "Subscription Plans Revamp",       "s": 15,   "e": 17,   "status": "not-started", "row": 3,  "category": "growth", "notes": "", "tv": 1, "pre": 0.5 },
-    { "id": 19, "name": "Offline Mode",                    "s": 15,   "e": 17,   "status": "not-started", "row": 7,  "category": "mobile", "notes": "", "tv": 1, "pre": 0.5 },
-    { "id": 20, "name": "⭐ Personalization Engine",         "s": 20,   "e": 22,   "status": "not-started", "row": 5,  "category": "mobile", "notes": "", "tv": 1, "pre": 0.5 },
-    { "id": 21, "name": "Data Warehouse Migration",        "s": 18.5, "e": 19.5, "status": "not-started", "row": 9,  "category": "data",   "notes": "Migration to the new lakehouse architecture", "tv": 1, "pre": 0.5 },
-    { "id": 22, "name": "⭐ Partner API v2",                 "s": 24,   "e": 25,   "status": "not-started", "row": 8,  "category": "platform", "notes": "Requirement sent to partnerships team", "tv": 1, "pre": 0.5 },
-    { "id": 23, "name": "Automated Forecast Reports",      "s": 15,   "e": 16,   "status": "not-started", "row": 9,  "category": "data",   "notes": "", "tv": 1, "pre": 0.5 }
+    {
+      "id": 1,
+      "name": "Onboarding Revamp",
+      "s": 0,
+      "e": 3,
+      "status": "completed",
+      "row": 0,
+      "category": "platform"
+    },
+    {
+      "id": 2,
+      "name": "Search Relevance Engine",
+      "s": 4,
+      "e": 7,
+      "status": "completed",
+      "row": 1,
+      "category": "data"
+    },
+    {
+      "id": 3,
+      "name": "Notification Center",
+      "s": 4,
+      "e": 6,
+      "status": "completed",
+      "row": 2,
+      "category": "platform"
+    },
+    {
+      "id": 4,
+      "name": "Referral Program",
+      "s": 0,
+      "e": 2,
+      "status": "completed",
+      "row": 3,
+      "category": "growth",
+      "notes": "Referral loop shipped to 100% of users"
+    },
+    {
+      "id": 5,
+      "name": "⭐ Checkout Redesign",
+      "s": 2,
+      "e": 5,
+      "status": "completed",
+      "row": 4,
+      "category": "growth",
+      "notes": "+1 sprint — payment gateway migration",
+      "tv": 1,
+      "pre": 0
+    },
+    {
+      "id": 6,
+      "name": "Dashboard Performance Uplift",
+      "s": 5.5,
+      "e": 8.5,
+      "status": "completed",
+      "row": 6,
+      "category": "platform"
+    },
+    {
+      "id": 7,
+      "name": "⭐ Mobile App Revamp",
+      "s": 9,
+      "e": 14,
+      "status": "in-progress",
+      "row": 2,
+      "category": "mobile",
+      "notes": "Full navigation + design system rewrite",
+      "tv": 1,
+      "pre": 0.5
+    },
+    {
+      "id": 8,
+      "name": "⭐ Recommendation Engine v2",
+      "s": 11,
+      "e": 15,
+      "status": "in-progress",
+      "row": 3,
+      "category": "data",
+      "notes": "",
+      "tv": 1,
+      "pre": 0
+    },
+    {
+      "id": 9,
+      "name": "Push Notifications 2.0",
+      "s": 10,
+      "e": 12,
+      "status": "in-progress",
+      "row": 4,
+      "category": "mobile"
+    },
+    {
+      "id": 10,
+      "name": "⭐ Multi-Currency Support",
+      "s": 13,
+      "e": 15,
+      "status": "in-progress",
+      "row": 1,
+      "category": "growth",
+      "notes": "Requirement sent to finance team",
+      "tv": 1,
+      "pre": 0.5
+    },
+    {
+      "id": 11,
+      "name": "Billing & Invoicing Overhaul",
+      "s": 12.5,
+      "e": 16,
+      "status": "delayed",
+      "row": 5,
+      "category": "platform",
+      "notes": "+1 sprint — vendor API delay",
+      "tv": 1,
+      "pre": 0
+    },
+    {
+      "id": 12,
+      "name": "Customer Data Platform",
+      "s": 12.5,
+      "e": 15.5,
+      "status": "delayed",
+      "row": 6,
+      "category": "data",
+      "notes": "Blocked on data governance review",
+      "tv": 1,
+      "pre": 0
+    },
+    {
+      "id": 13,
+      "name": "Loyalty Points System",
+      "s": 10,
+      "e": 14,
+      "status": "delayed",
+      "row": 7,
+      "category": "growth",
+      "notes": "",
+      "tv": 1,
+      "pre": 0.5
+    },
+    {
+      "id": 16,
+      "name": "🎨 Design System 2.0",
+      "s": 11.5,
+      "e": 14.5,
+      "status": "in-progress",
+      "row": 8,
+      "category": "platform",
+      "notes": "Tokens + component library refresh",
+      "tv": 1,
+      "pre": 0
+    },
+    {
+      "id": 17,
+      "name": "⭐ Fraud Detection ML Model",
+      "s": 19,
+      "e": 21,
+      "status": "not-started",
+      "row": 3,
+      "category": "data",
+      "notes": "Requirement sent to risk team",
+      "tv": 1,
+      "pre": 0.5
+    },
+    {
+      "id": 18,
+      "name": "Subscription Plans Revamp",
+      "s": 15,
+      "e": 17,
+      "status": "not-started",
+      "row": 0,
+      "category": "growth",
+      "notes": "",
+      "tv": 1,
+      "pre": 0.5
+    },
+    {
+      "id": 19,
+      "name": "Offline Mode",
+      "s": 15,
+      "e": 17,
+      "status": "not-started",
+      "row": 4,
+      "category": "mobile",
+      "notes": "",
+      "tv": 1,
+      "pre": 0.5
+    },
+    {
+      "id": 20,
+      "name": "⭐ Personalization Engine",
+      "s": 20,
+      "e": 22,
+      "status": "not-started",
+      "row": 1,
+      "category": "mobile",
+      "notes": "",
+      "tv": 1,
+      "pre": 0.5
+    },
+    {
+      "id": 21,
+      "name": "Data Warehouse Migration",
+      "s": 19,
+      "e": 20,
+      "status": "not-started",
+      "row": 6,
+      "category": "data",
+      "notes": "Migration to the new lakehouse architecture",
+      "tv": 1,
+      "pre": 0.5
+    },
+    {
+      "id": 22,
+      "name": "⭐ Partner API v2",
+      "s": 22.5,
+      "e": 23.5,
+      "status": "not-started",
+      "row": 5,
+      "category": "platform",
+      "notes": "Requirement sent to partnerships team",
+      "tv": 1,
+      "pre": 0.5
+    },
+    {
+      "id": 23,
+      "name": "Automated Forecast Reports",
+      "s": 19,
+      "e": 20,
+      "status": "not-started",
+      "row": 5,
+      "category": "data",
+      "notes": "",
+      "tv": 1,
+      "pre": 0.5
+    }
   ]
 };
 // <<DATA_END>>
@@ -855,7 +1083,7 @@ function toggleTheme() {
 const _IDB = {
   async _open() {
     return new Promise((ok, fail) => {
-      const r = indexedDB.open('roadmap_hcm', 1);
+      const r = indexedDB.open('roadmap_public', 1);
       r.onupgradeneeded = e => e.target.result.createObjectStore('fh');
       r.onsuccess = e => ok(e.target.result);
       r.onerror   = () => fail(r.error);
